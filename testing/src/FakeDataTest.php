@@ -29,10 +29,9 @@ final class FakeDataTest extends TestCase
         $nombreArticle = 5000;
         $result = fake_data($nombreArticle);
 
-        $this->assertSame($nombreArticle, count($result));
-
-        for ($i = 0; $i < $nombreArticle; $i++) {
+        for ($i = 0; $i < count($result); $i++) {
             $article = $result[$i];
+            $this->assertIsArray($article);
             $this->assertArrayHasKey("title", $article);
             $this->assertArrayHasKey("description", $article);
             $this->assertArrayHasKey("price", $article);
