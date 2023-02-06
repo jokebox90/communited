@@ -20,9 +20,9 @@ function fake_data($number_faker)
 $result = fake_data(5);
 
 for ($i = 0; $i < 5; $i++) {
-    echo "Title: " . $result[0][$i] . "<br>";
-    echo "Description: " . $result[1][$i] . "<br>";
-    echo "Price: " . $result[2][$i] . "<br>";
-    echo "Duration: " . $result[3][$i] . "<br>";
-    echo "<br>";
+    echo "Title: " . $result[0][$i] . "\n";
+    echo "Description: " . $result[1][$i] ."\n";
+    echo "Price: " . $result[2][$i] ."\n";
+    echo "Duration: " . $result[3][$i] ."\n";
+    echo"\n";
 }
