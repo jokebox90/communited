@@ -3,7 +3,8 @@
     "description": "Suite de tests pour l'application",
     "type": "library",
     "require": {
-        "phpunit/phpunit": "^10"
+        "phpunit/phpunit": "^10",
+        "fakerphp/faker": "^1.21"
     },
     "license": "MPL 2.0",
     "autoload": {
