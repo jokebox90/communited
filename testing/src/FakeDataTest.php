@@ -36,6 +36,7 @@ final class FakeDataTest extends TestCase
             $this->assertArrayHasKey("description", $article);
             $this->assertArrayHasKey("price", $article);
             $this->assertArrayHasKey("duration", $article);
+            $this->assertArrayHasKey("frequency", $article);
         }
     }
 }
