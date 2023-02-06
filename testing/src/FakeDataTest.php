@@ -11,7 +11,7 @@ final class FakeDataTest extends TestCase
     public function testNombreArticle(): void
     {
         $nombreArticle = 5;
-        $result = fake_data($nombreArticle);
+        $result = getArticleCollection($nombreArticle);
 
         $this->assertSame($nombreArticle, count($result));
     }
@@ -19,7 +19,7 @@ final class FakeDataTest extends TestCase
     public function testGrandNombreArticle(): void
     {
         $nombreArticle = 5000;
-        $result = fake_data($nombreArticle);
+        $result = getArticleCollection($nombreArticle);
 
         $this->assertSame($nombreArticle, count($result));
     }
@@ -27,7 +27,7 @@ final class FakeDataTest extends TestCase
     public function testStructureDeChaqueArticle(): void
     {
         $nombreArticle = 5000;
-        $result = fake_data($nombreArticle);
+        $result = getArticleCollection($nombreArticle);
 
         for ($i = 0; $i < count($result); $i++) {
             $article = $result[$i];
