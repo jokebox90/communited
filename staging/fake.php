@@ -1,28 +1,25 @@
 <?php
+
 require_once 'vendor/autoload.php';
 
-$title=[];
-$description = [];
-$price = [];
-$duration = [];
-function fake_data($number_faker)
-{
-    $faker = Faker\Factory::create('fr_FR');
-    for($i = 0 ; $i < $number_faker ; $i++){
-        $title[] = $faker->sentence(4);
-        $description[] = $faker->paragraph();
-        $price[] = $faker->randomDigit();
-        $duration[]= $faker->numberBetween(0, 5);
-    }
-    return [$title,$description,$price,$duration];
+function getArticleCollection($limit) {
+  $fake = Faker\Factory::create('fr_FR');
+
+  $collection = array();
+  for ($i = 0; $i < $limit; $i++) {
+    $unArticleFakeIci = [
+      "title" => $fake->sentence(5),
+      "description" => $fake->paragraph(),
+      "price" => $fake->randomDigit(),
+      "duration" => $fake->numberBetween(0, 12),
+    ];
+
+    array_push($collection, $unArticleFakeIci);
+  }
+
+  return $collection;
 }
 
-$result = fake_data(5);
+// print_r(getArticleCollection(5));
 
-for ($i = 0; $i < 5; $i++) {
-    echo "Title: " . $result[0][$i] . "<br>";
-    echo "Description: " . $result[1][$i] . "<br>";
-    echo "Price: " . $result[2][$i] . "<br>";
-    echo "Duration: " . $result[3][$i] . "<br>";
-    echo "<br>";
-}
+// print_r(getArticleCollection(15));

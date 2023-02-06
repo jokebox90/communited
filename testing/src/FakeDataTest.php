@@ -11,26 +11,26 @@ final class FakeDataTest extends TestCase
     public function testNombreArticle(): void
     {
         $nombreArticle = 5;
-        $result = getArticleCollection($nombreArticle);
+        $collection = getArticleCollection($nombreArticle);
 
-        $this->assertSame($nombreArticle, count($result));
+        $this->assertSame($nombreArticle, count($collection));
     }
 
     public function testGrandNombreArticle(): void
     {
         $nombreArticle = 5000;
-        $result = getArticleCollection($nombreArticle);
+        $collection = getArticleCollection($nombreArticle);
 
-        $this->assertSame($nombreArticle, count($result));
+        $this->assertSame($nombreArticle, count($collection));
     }
 
     public function testStructureDeChaqueArticle(): void
     {
         $nombreArticle = 5000;
-        $result = getArticleCollection($nombreArticle);
+        $collection = getArticleCollection($nombreArticle);
 
-        for ($i = 0; $i < count($result); $i++) {
-            $article = $result[$i];
+        for ($i = 0; $i < count($collection); $i++) {
+            $article = $collection[$i];
             $this->assertIsArray($article);
             $this->assertArrayHasKey("title", $article);
             $this->assertArrayHasKey("description", $article);
