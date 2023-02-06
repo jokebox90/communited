@@ -10,9 +10,9 @@ final class FakeDataTest extends TestCase
 {
     public function testFakeData(): void
     {
-        $nombreArtcile = 5;
-        $result = fake_data($nombreArtcile);
+        $nombreArticle = 5;
+        $result = fake_data($nombreArticle);
 
-        $this->assertSame($nombreArtcile, count($result));
+        $this->assertSame($nombreArticle, count($result));
     }
 }
