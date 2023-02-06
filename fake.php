@@ -9,10 +9,10 @@ function fake_data($number_faker)
 {
     $faker = Faker\Factory::create('fr_FR');
     for($i = 0 ; $i < $number_faker ; $i++){
-        $title[] = $faker->sentence(4);
-        $description[] = $faker->paragraph();
-        $price[] = $faker->randomDigit();
-        $duration[]= $faker->numberBetween(0, 5);
+        $title[] = $faker->unique()->sentence(3);
+        $description[] = $faker->unique()->paragraph();
+        $price[] = $faker->unique()->randomDigit();
+        $duration[]= $faker->unique()->numberBetween(0, 5);
     }
     return [$title,$description,$price,$duration];
 }
