@@ -6,7 +6,7 @@ require_once('../staging/fake.php');
 
 use PHPUnit\Framework\TestCase;
 
-final class FakeDataTest extends TestCase
+final class ArticleCollectionTest extends TestCase
 {
     public function testNombreArticle(): void
     {
@@ -35,6 +35,7 @@ final class FakeDataTest extends TestCase
             $this->assertArrayHasKey("title", $article);
             $this->assertArrayHasKey("description", $article);
             $this->assertArrayHasKey("price", $article);
+            $this->assertArrayHasKey("available", $article);
             $this->assertArrayHasKey("duration", $article);
             $this->assertArrayHasKey("frequency", $article);
         }
