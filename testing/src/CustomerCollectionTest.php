@@ -38,6 +38,8 @@ final class CustomerCollectionTest extends TestCase
             $this->assertArrayHasKey("phone", $Customer);
             $this->assertArrayHasKey("email", $Customer);
             $this->assertArrayHasKey("customer_id", $Customer);
+            $this->assertArrayHasKey("birthdate", $Customer);
+            
         }
     }
 }
