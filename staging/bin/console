@@ -1,18 +1,24 @@
 #!/usr/bin/env php
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
 use App\Command\ArticleCommand;
 use App\Command\CustomerCommand;
-use Symfony\Component\Console\Application;
+use App\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
-// Symfony Application
-$application = new Application("communited", "0.0.1");
+if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
+    throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
+}
 
-// Register command
-$application->add(new CustomerCommand());
-$application->add(new ArticleCommand());
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-// Run it
-$application->run();
+return function (array $context) {
+    $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+
+    $app = new Application($kernel);
+
+    $app->add(new CustomerCommand());
+    $app->add(new ArticleCommand());
+
+    return $app;
+};
