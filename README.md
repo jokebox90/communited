@@ -1,10 +1,12 @@
 # Communited
 
-## Testing
+## Staging
 
 ```
-cd testing
+cd staging
 composer install
+composer dump-autoload
 
-vendor/bin/phpunit src/FakeDataTest.php
+symfony console article
+symfony console customer
 ```
