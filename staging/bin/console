@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\Command\ArticleCommand;
+use App\Command\CustomerCommand;
+use Symfony\Component\Console\Application;
+
+// Symfony Application
+$application = new Application("communited", "0.0.1");
+
+// Register command
+$application->add(new CustomerCommand());
+$application->add(new ArticleCommand());
+
+// Run it
+$application->run();
