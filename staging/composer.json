@@ -3,9 +3,19 @@
     "description": "Suite de tests pour l'application",
     "type": "library",
     "require": {
-        "phpunit/phpunit": "^10",
-        "fakerphp/faker": "^1.21",
-        "symfony/console": "^6.2"
+        "symfony/console": "^6.2",
+        "symfony/flex": "^2.2",
+        "sensio/framework-extra-bundle": "^6.2",
+        "symfony/mailer": "^6.2",
+        "symfony/validator": "^6.2",
+        "doctrine/annotations": "^1.0",
+        "phpdocumentor/reflection-docblock": "^5.3",
+        "phpstan/phpdoc-parser": "^1.16",
+        "symfony/property-access": "^6.2",
+        "symfony/property-info": "^6.2",
+        "symfony/serializer": "^6.2",
+        "symfony/runtime": "^6.2",
+        "symfony/yaml": "^6.2"
     },
     "license": "MPL 2.0",
     "autoload": {
@@ -18,5 +28,28 @@
             "name": "Jokebox90",
             "email": "dev.jvagnier@gmail.com"
         }
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        }
+    },
+    "require-dev": {
+        "symfony/dotenv": "^6.2",
+        "symfony/maker-bundle": "^1.48",
+        "phpunit/phpunit": "^10",
+        "fakerphp/faker": "^1.21"
+    },
+    "extra": {
+        "symfony": {
+            "docker": false
+        }
+    }
 }
