@@ -2,45 +2,46 @@
 
 declare(strict_types=1);
 
-require_once 'vendor/autoload.php';
-
 use App\Collection\CustomerCollection;
 use PHPUnit\Framework\TestCase;
 
 final class CustomerCollectionTest extends TestCase
 {
-    public function testNombreCustomer(): void
+    public function testnbCustomer(): void
     {
-        $nombreCustomer = 5;
-        $collection = CustomerCollection::getCustomerCollection($nombreCustomer);
+        $nbCustomer = 5;
+        $customers = new CustomerCollection();
+        $results = $customers->getAll($nbCustomer);
 
-        $this->assertSame($nombreCustomer, count($collection));
+        $this->assertSame($nbCustomer, count($results));
     }
 
-    public function testGrandNombreCustomer(): void
+    public function testGrandnbCustomer(): void
     {
-        $nombreCustomer = 5000;
-        $collection = CustomerCollection::getCustomerCollection($nombreCustomer);
+        $nbCustomer = 5000;
+        $customers = new CustomerCollection();
+        $results = $customers->getAll($nbCustomer);
 
-        $this->assertSame($nombreCustomer, count($collection));
+        $this->assertSame($nbCustomer, count($results));
     }
 
     public function testStructureDeChaqueCustomer(): void
     {
-        $nombreCustomer = 5000;
-        $collection = CustomerCollection::getCustomerCollection($nombreCustomer);
+        $nbCustomer = 5000;
+        $customers = new CustomerCollection();
+        $results = $customers->getAll($nbCustomer);
 
-        for ($i = 0; $i < count($collection); $i++) {
-            $Customer = $collection[$i];
+        for ($i = 0; $i < count($results); $i++) {
+            $Customer = $results[$i];
             $this->assertIsArray($Customer);
             $this->assertArrayHasKey("firstname", $Customer);
             $this->assertArrayHasKey("lastname", $Customer);
             $this->assertArrayHasKey("address", $Customer);
+            $this->assertIsArray($Customer["address"]);
             $this->assertArrayHasKey("phone", $Customer);
             $this->assertArrayHasKey("email", $Customer);
             $this->assertArrayHasKey("customer_id", $Customer);
             $this->assertArrayHasKey("birthdate", $Customer);
-
         }
     }
 }
