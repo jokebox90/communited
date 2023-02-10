@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '99aa26c3f4dd75def96f5f9bb7e1781315abed6b',
+        'reference' => '20253ffa9ba997efb397a3243fde372a92ad502a',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '99aa26c3f4dd75def96f5f9bb7e1781315abed6b',
+            'reference' => '20253ffa9ba997efb397a3243fde372a92ad502a',
             'dev_requirement' => false,
         ),
         'fakerphp/faker' => array(
