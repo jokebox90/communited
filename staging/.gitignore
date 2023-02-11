@@ -13,3 +13,6 @@ vendor/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+### NodeJS
+/node_modules/
