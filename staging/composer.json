@@ -15,7 +15,10 @@
         "symfony/property-info": "^6.2",
         "symfony/serializer": "^6.2",
         "symfony/runtime": "^6.2",
-        "symfony/yaml": "^6.2"
+        "symfony/yaml": "^6.2",
+        "symfony/webpack-encore-bundle": "^1.16",
+        "symfony/ux-vue": "^2.7",
+        "symfony/twig-bundle": "^6.2"
     },
     "license": "MPL 2.0",
     "autoload": {

@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "watch",
+			"path": "staging",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: watch - staging",
+			"detail": "encore dev --watch"
+		}
+	]
+}
