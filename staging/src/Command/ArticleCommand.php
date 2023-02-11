@@ -6,14 +6,16 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Collection\ArticleCollection;
+use App\Entity\Article;
+use App\Repository\ArticleRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
 
 #[AsCommand(
     name: "app:article",
@@ -21,43 +23,85 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class ArticleCommand extends Command
 {
+    private ArticleRepository|null $articleRepository = null;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->articleRepository = $doctrine->getRepository(Article::class);
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setHelp("Vous permet de gérer les articles de votre boutique.");
-        $this->addOption("limit", "l", InputOption::VALUE_OPTIONAL, "Nombre d'articles.", -1);
+        $this->addOption("limit", "l", InputOption::VALUE_OPTIONAL, "Nombre d'articles par page.", 10);
+    }
+
+    protected function getOptions(InputInterface $input): array
+    {
+        $options = [];
+
+        $limitValue = $input->getOption("limit");
+        $options["limit"] = ($limitValue > 0) ? (int) $limitValue : 10;
+
+        return $options;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->section("Gestion des clients");
+        $formatter = $this->getHelper("formatter");
 
-        $limitValue = $input->getOption("limit");
-        $limit = ($limitValue > 0) ? $limitValue : 5;
-        $articles = new ArticleCollection();
-        $results = $articles->getAll($limit);
+        $options = $this->getOptions($input);
+        $articles = $this->articleRepository->findAll();
 
-        $io = new SymfonyStyle($input, $output);
-        for ($i = 0; $i < count($results); $i++) {
-            $io->section(sprintf("Article #%d", $i + 1));
-
-            $article = $results[$i];
-            $output->writeln(sprintf(" * unique_id:    %s", $article["unique_id"]));
-            $output->writeln(sprintf(" * title:        %s", $article["title"]));
-            $output->writeln(sprintf(" * description:  %s", $article["description"]));
-            $output->writeln(sprintf(" * available:    %d", $article["available"]));
-            $output->writeln(sprintf(" * tags:         %s", implode(", ", $article["tags"])));
-            $output->writeln(" * prices:");
-
-            for ($j = 0; $j < count($article["prices"]); $j++) {
-                $output->writeln(sprintf("\t * price #%d", $j + 1));
-
-                $price = $article["prices"][$j];
-                $output->writeln(sprintf("\t\t- amount:     %d € par semaine", $price["amount"]));
-                $output->writeln(sprintf("\t\t- frequency:  %s", $price["frequency"]));
-                $output->writeln(sprintf("\t\t- duration:   %d", $price["duration"]));
+        $io->title("Gestion des articles");
+        foreach ($articles as $key => $articleObject) {
+            if ($key > 1 && $key % $options["limit"] <= 0) {
+                $io->ask("Appuyez sur 'Entrée' pour continuer...");
             }
-            $output->writeln("");
+
+            $article = $articleObject->populateArray();
+
+            $prices = $article["prices"];
+            $priceArray = $prices->map(function ($value) use ($formatter) {
+                return [
+                    $value["amount"],
+                    $value["duration"],
+                    $value["frequency"],
+                    $value["status"],
+                    $formatter->truncate($value["description"], 27),
+                ];
+            });
+
+            $io->title(sprintf("> Article #%d", $key));
+
+            $io->definitionList(
+                ["Element" => "Valeur"],
+                new TableSeparator(),
+                ["uniqueId"  => $article["uniqueId"]],
+                ["available" => $article["available"]],
+                ["tags"      => implode(", ", $article["tags"])],
+                ["status"    => $article["status"]],
+            );
+
+            $io->note([
+                sprintf("Titre : %s", $article["title"]),
+                sprintf("Description : %s", $article["description"]),
+            ]);
+
+            $io->section("Tous les prix");
+            $io->table(
+                [
+                    "amount         ",
+                    "duration       ",
+                    "frequency      ",
+                    "status         ",
+                    "description                   ",
+                ],
+                $priceArray->toArray(),
+            );
         }
 
         $output->writeln("done.");
