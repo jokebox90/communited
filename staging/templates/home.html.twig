@@ -1,0 +1,13 @@
+{# templates/index.html.twig #}
+{% extends "base.html.twig" %}
+
+{% block body %}
+	<div
+		id="home"
+		{{ vue_component("Home", {
+			"name": name,
+			"message": message,
+			"path": path
+		}) }}
+	/>
+{% endblock %}
