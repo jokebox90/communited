@@ -177,7 +177,6 @@ class Article
             $price->exchangeArray($priceArray);
             $this->addPrice($price);
         }
-
         return $this;
     }
 
