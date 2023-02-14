@@ -2,16 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\ArticleRepository;
+use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
-#[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[ORM\Index(name: "article_idx", columns: ["status"])]
-class Article
+#[ORM\Entity(repositoryClass: ItemRepository::class)]
+#[ORM\Table("shop_items")]
+#[ORM\Index(name: "item_idx", columns: ["status"])]
+class Item
 {
     const STATUS_ACTIVE    = "actif";
     const STATUS_INACTIVE  = "inactif";
@@ -24,7 +25,7 @@ class Article
     #[ORM\Column(length: 36)]
     private ?string $uniqueId = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -33,11 +34,17 @@ class Article
     #[ORM\Column]
     private ?int $available = null;
 
-    #[ORM\OneToMany(targetEntity: ArticlePrice::class, mappedBy: "article", cascade: ["persist"])]
+    #[ORM\OneToMany(targetEntity: Price::class, mappedBy: "item", cascade: ["persist"])]
     private Collection $prices;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY)]
     private array $tags = [];
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modifiedAt = null;
 
     #[ORM\Column(length: 20)]
     private ?string $status = null;
@@ -55,6 +62,67 @@ class Article
     public function setUniqueId(string $uniqueId): self
     {
         $this->uniqueId = $uniqueId;
+
+        return $this;
+    }
+
+    public function getPrices(): Collection
+    {
+        return $this->prices;
+    }
+
+    public function addPrice(Price $price): self
+    {
+        if (!$this->prices->contains($price)) {
+            $this->prices->add($price);
+            $price->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrice(Price $price): self
+    {
+        if ($this->prices->contains($price)) {
+            $this->prices->removeElement($price);
+            $price->setItem(null);
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
@@ -95,32 +163,6 @@ class Article
         return $this;
     }
 
-    public function getPrices(): Collection
-    {
-        return $this->prices;
-    }
-
-    public function addPrice(ArticlePrice $price): self
-    {
-        if (!$this->prices->contains($price)) {
-            $this->prices->add($price);
-            $price->setArticle($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrice(ArticlePrice $price): self
-    {
-        if ($this->prices->contains($price)) {
-            $this->prices->removeElement($price);
-            $price->setArticle(null);
-        }
-
-        return $this;
-    }
-
-
     public function getTags(): array
     {
         return $this->tags;
@@ -129,18 +171,6 @@ class Article
     public function setTags(array $tags): self
     {
         $this->tags = $tags;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -164,14 +194,14 @@ class Article
             $priceArray = $array["prices"][$i];
 
             $predicate =
-                function  (int $key, ArticlePrice $value) use ($priceArray) {
+                function  (int $key, Price $value) use ($priceArray) {
                     return $priceArray["uniqueId"] === $value->getUniqueId();
                 };
 
             if ($this->prices->exists($predicate)) {
                 $price = $this->prices->findFirst($predicate);
             } else {
-                $price = new ArticlePrice();
+                $price = new Price();
             }
 
             $price->exchangeArray($priceArray);
@@ -189,7 +219,7 @@ class Article
         $array["tags"] = $this->getTags();
         $array["status"] = $this->getStatus();
         $array["prices"] = $this->getPrices()
-            ->map(function (ArticlePrice $price) {
+            ->map(function (Price $price) {
                 return $price->populateArray();
             });
 

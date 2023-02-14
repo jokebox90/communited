@@ -82,7 +82,7 @@ final class CustomerCommand extends Command
                 ["birthDate"    => $customer["birthDate"]],
             );
 
-            foreach ($customer["postalAddress"] as $subkey => $address) {
+            foreach ($customer["Address"] as $subkey => $address) {
                 $io->section(sprintf("Adresse #%d", $subkey));
 
                 $io->definitionList(

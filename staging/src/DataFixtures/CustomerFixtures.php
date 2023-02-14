@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Entity\Customer;
-use App\Entity\CustomerPostalAddress;
+use App\Entity\Address;
 use App\Entity\CustomerPrice;
 use App\Repository\CustomerRepository;
 use DateTime;
@@ -38,9 +38,9 @@ final class CustomerFixtures extends Fixture
         for ($i = 0; $i < self::COUNTER; $i++) {
             $customerId = (Uuid::uuid4())->toString();
 
-            $postalAddress = [];
+            $Address = [];
             for ($j = 0; $j < self::POSTAL_ADDRESS_COUNTER; $j++) {
-                $postalAddress[] = [
+                $Address[] = [
                     "uniqueId"        => (Uuid::uuid4())->toString(),
                     "customerId"      => $customerId,
                     "street"          => $this->faker->streetAddress(),
@@ -59,7 +59,7 @@ final class CustomerFixtures extends Fixture
                     ),
                     "intercom"        => $this->faker->randomNumber(3),
                     "additionalNotes" => implode(" ", $this->faker->sentences(5)),
-                    "status"          => $this->faker->randomElement(CustomerPostalAddress::AVAILABLE_STATUS),
+                    "status"          => $this->faker->randomElement(Address::AVAILABLE_STATUS),
                 ];
             }
 
@@ -72,7 +72,7 @@ final class CustomerFixtures extends Fixture
                 "emailAddress"  => $this->faker->email(),
                 "birthDate"     => $this->faker->dateTimeBetween('-99 year', '-13 years')->format("Y-m-d"),
                 "status"        => $this->faker->randomElement(Customer::AVAILABLE_STATUS),
-                "postalAddress" => $postalAddress,
+                "Address" => $Address,
             ];
 
             $newCustomer = new Customer();

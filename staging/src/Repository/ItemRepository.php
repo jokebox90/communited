@@ -2,31 +2,31 @@
 
 namespace App\Repository;
 
-use App\Entity\Article;
+use App\Entity\Item;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Article>
+ * @extends ServiceEntityRepository<Item>
  *
- * @method Article|null find($id, $lockMode = null, $lockVersion = null)
- * @method Article|null findOneBy(array $criteria, array $orderBy = null)
- * @method Article[]    findAll()
- * @method Article[]    findAllByPage(int $offset = 0, int $limit = 10)
- * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Item|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Item|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Item[]    findAll()
+ * @method Item[]    findAllByPage(int $offset = 0, int $limit = 10)
+ * @method Item[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  * @method int          getCount()
- * @method void         save(Article $entity, bool $flush = false)
- * @method void         remove(Article $entity, bool $flush = false)
+ * @method void         save(Item $entity, bool $flush = false)
+ * @method void         remove(Item $entity, bool $flush = false)
  */
-class ArticleRepository extends ServiceEntityRepository
+class ItemRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Article::class);
+        parent::__construct($registry, Item::class);
     }
 
-    public function save(Article $entity, bool $flush = false): void
+    public function save(Item $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -35,7 +35,7 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Article $entity, bool $flush = false): void
+    public function remove(Item $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -68,7 +68,7 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     //    /**
-    //     * @return Article[] Returns an array of Article objects
+    //     * @return Item[] Returns an array of Item objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -82,7 +82,7 @@ class ArticleRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Article
+    //    public function findOneBySomeField($value): ?Item
     //    {
     //        return $this->createQueryBuilder('a')
     //            ->andWhere('a.exampleField = :val')
