@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// staging/src/Command/ArticleCommand.php
+// staging/src/Command/ItemCommand.php
 
 namespace App\Command;
 
