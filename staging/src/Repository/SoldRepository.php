@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\CheckoutPayment;
+use App\Entity\Sold;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CheckoutPayment>
+ * @extends ServiceEntityRepository<Sold>
  *
- * @method CheckoutPayment|null find($id, $lockMode = null, $lockVersion = null)
- * @method CheckoutPayment|null findOneBy(array $criteria, array $orderBy = null)
- * @method CheckoutPayment[]    findAll()
- * @method CheckoutPayment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Sold|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Sold|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Sold[]    findAll()
+ * @method Sold[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CheckoutPaymentRepository extends ServiceEntityRepository
+class SoldRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CheckoutPayment::class);
+        parent::__construct($registry, Sold::class);
     }
 
-    public function save(CheckoutPayment $entity, bool $flush = false): void
+    public function save(Sold $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CheckoutPaymentRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(CheckoutPayment $entity, bool $flush = false): void
+    public function remove(Sold $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CheckoutPaymentRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CheckoutPayment[] Returns an array of CheckoutPayment objects
+//     * @return Sold[] Returns an array of Sold objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CheckoutPaymentRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?CheckoutPayment
+//    public function findOneBySomeField($value): ?Sold
 //    {
 //        return $this->createQueryBuilder('o')
 //            ->andWhere('o.exampleField = :val')

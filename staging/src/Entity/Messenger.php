@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\MessengerMessagesRepository;
+use App\Repository\MessengerRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: MessengerMessagesRepository::class)]
+#[ORM\Entity(repositoryClass: MessengerRepository::class)]
+#[ORM\Table("messenger_messages")]
 #[ORM\Index(name: "messenger_messages_idx", columns: ["queue_name", "available_at", "delivered_at"])]
-class MessengerMessages
+class Messenger
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

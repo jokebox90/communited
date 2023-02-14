@@ -3,25 +3,52 @@
 namespace App\Entity;
 
 use App\Repository\PriceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 #[ORM\Entity(repositoryClass: PriceRepository::class)]
-#[ORM\Index(name: "article_price_idx", columns: ["article_id", "status"])]
-class ArticlePrice
+#[ORM\Table("shop_prices")]
+#[ORM\Index(name: "price_idx", columns: ["item_id", "status"])]
+class Price
 {
+    const STATUS_ACTIVE    = "actif";
+    const STATUS_INACTIVE  = "inactif";
+    const STATUS_DELETED   = "supprimé";
+    const AVAILABLE_STATUS = [
+        self::STATUS_ACTIVE,
+        self::STATUS_INACTIVE,
+        self::STATUS_DELETED,
+    ];
+
+    const FREQUENCY_DAILY    = "journalier";
+    const FREQUENCY_WEEKLY   = "hebdomadaire";
+    const FREQUENCY_MONTHLY  = "mensuel";
+    const FREQUENCY_QUARTER  = "trimestriel";
+    const FREQUENCY_SEMESTER = "semestre";
+    const FREQUENCY_ANNUAL   = "annuel";
+    const AVAILABLE_FREQUENCIES = [
+        self::FREQUENCY_DAILY,
+        self::FREQUENCY_WEEKLY,
+        self::FREQUENCY_MONTHLY,
+        self::FREQUENCY_QUARTER,
+        self::FREQUENCY_SEMESTER,
+        self::FREQUENCY_ANNUAL,
+    ];
+
     #[ORM\Id]
-    #[ORM\Column(length: 36)]
+    #[ORM\Column(length: 36, type: Types::STRING)]
     private ?string $uniqueId = null;
 
-    #[ORM\Column(length: 36, unique: false)]
-    private ?string $articleId = null;
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: "prices")]
+    #[ORM\JoinColumn(name: "item_id", referencedColumnName: "unique_id")]
+    private Item|null $item = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $status = null;
 
     #[ORM\Column]
     private ?float $amount = null;
-
-    #[ORM\Column(length: 120)]
-    private ?string $description = null;
 
     #[ORM\Column]
     private ?int $duration = null;
@@ -29,12 +56,8 @@ class ArticlePrice
     #[ORM\Column(length: 20)]
     private ?string $frequency = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $status = null;
-
-    #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: "prices")]
-    #[ORM\JoinColumn(name: "article_id", referencedColumnName: "unique_id")]
-    private Article|null $article = null;
+    #[ORM\Column(length: 120)]
+    private ?string $description = null;
 
     public function getUniqueId(): ?string
     {
@@ -48,14 +71,26 @@ class ArticlePrice
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getItem(): ?Item
     {
-        return $this->description;
+        return $this->item;
     }
 
-    public function setDescription(string $description): self
+    public function setItem(?Item $item): self
     {
-        $this->description = $description;
+        $this->item = $item;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
@@ -96,38 +131,14 @@ class ArticlePrice
         return $this;
     }
 
-    public function getArticleId(): ?string
+    public function getDescription(): ?string
     {
-        return $this->articleId;
+        return $this->description;
     }
 
-    public function setArticleId(string $articleId): self
+    public function setDescription(string $description): self
     {
-        $this->articleId = $articleId;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getArticle(): ?Article
-    {
-        return $this->article;
-    }
-
-    public function setArticle(?Article $article): self
-    {
-        $this->article = $article;
+        $this->description = $description;
 
         return $this;
     }
@@ -141,7 +152,6 @@ class ArticlePrice
             $this->setUniqueId($uuid->toString());
         }
 
-        $this->setArticleId($array["articleId"]);
         $this->setDescription($array["description"]);
         $this->setAmount($array["amount"]);
         $this->setDuration($array["duration"]);
@@ -154,7 +164,7 @@ class ArticlePrice
     public function populateArray(array $array = []): array
     {
         $array["uniqueId"] = $this->getUniqueId();
-        $array["articleId"] = $this->getArticleId();
+        $array["itemId"] = $this->getItem()->getUniqueId();
         $array["description"] = $this->getDescription();
         $array["amount"] = $this->getAmount();
         $array["duration"] = $this->getDuration();

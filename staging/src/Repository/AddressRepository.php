@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\CustomerPostalAddress;
+use App\Entity\Address;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CustomerPostalAddress>
+ * @extends ServiceEntityRepository<Address>
  *
- * @method CustomerPostalAddress|null find($id, $lockMode = null, $lockVersion = null)
- * @method CustomerPostalAddress|null findOneBy(array $criteria, array $orderBy = null)
- * @method CustomerPostalAddress[]    findAll()
- * @method CustomerPostalAddress[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Address|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Address|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Address[]    findAll()
+ * @method Address[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CustomerPostalAddressRepository extends ServiceEntityRepository
+class AddressRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CustomerPostalAddress::class);
+        parent::__construct($registry, Address::class);
     }
 
-    public function save(CustomerPostalAddress $entity, bool $flush = false): void
+    public function save(Address $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CustomerPostalAddressRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(CustomerPostalAddress $entity, bool $flush = false): void
+    public function remove(Address $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CustomerPostalAddressRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CustomerPostalAddress[] Returns an array of CustomerPostalAddress objects
+//     * @return Address[] Returns an array of Address objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CustomerPostalAddressRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?CustomerPostalAddress
+//    public function findOneBySomeField($value): ?Address
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

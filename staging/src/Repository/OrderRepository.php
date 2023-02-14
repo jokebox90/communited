@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\CheckoutItem;
+use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CheckoutItem>
+ * @extends ServiceEntityRepository<Order>
  *
- * @method CheckoutItem|null find($id, $lockMode = null, $lockVersion = null)
- * @method CheckoutItem|null findOneBy(array $criteria, array $orderBy = null)
- * @method CheckoutItem[]    findAll()
- * @method CheckoutItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Order|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Order|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Order[]    findAll()
+ * @method Order[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CheckoutItemRepository extends ServiceEntityRepository
+class OrderRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CheckoutItem::class);
+        parent::__construct($registry, Order::class);
     }
 
-    public function save(CheckoutItem $entity, bool $flush = false): void
+    public function save(Order $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CheckoutItemRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(CheckoutItem $entity, bool $flush = false): void
+    public function remove(Order $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CheckoutItemRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return CheckoutItem[] Returns an array of CheckoutItem objects
+//     * @return Order[] Returns an array of Order objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CheckoutItemRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?CheckoutItem
+//    public function findOneBySomeField($value): ?Order
 //    {
 //        return $this->createQueryBuilder('o')
 //            ->andWhere('o.exampleField = :val')

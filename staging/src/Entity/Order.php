@@ -2,27 +2,29 @@
 
 namespace App\Entity;
 
-use App\Repository\CheckoutRepository;
+use App\Repository\OrderRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Validator\Constraints\Cascade;
 
-#[ORM\Entity(repositoryClass: CheckoutRepository::class)]
-#[ORM\Index(name: "checkout_idx", columns: ["customer_id", "address_id"])]
-class Checkout
+#[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Table("shop_orders")]
+#[ORM\Index(name: "order_idx", columns: ["customer_id", "address_id"])]
+class Order
 {
     const STATUS_OPEN        = "ouverte";
-    const STATUS_VALIDATED   = "valide";
+    const STATUS_VALID       = "valide";
     const STATUS_PROCESSING  = "traitement";
     const STATUS_PAUSED      = "pause";
     const STATUS_STOPPED     = "arret";
     const STATUS_TERMINATED  = "cloture";
     const AVAILABLE_STATUS = [
         self::STATUS_OPEN,
-        self::STATUS_VALIDATED,
+        self::STATUS_VALID,
         self::STATUS_PROCESSING,
         self::STATUS_PAUSED,
         self::STATUS_STOPPED,
@@ -33,20 +35,14 @@ class Checkout
     #[ORM\Column(length: 36)]
     private ?string $uniqueId = null;
 
-    #[ORM\Column(length: 36)]
-    private ?string $customerId = null;
-
-    #[ORM\Column(length: 36)]
-    private ?string $addressId = null;
-
-    #[ORM\Column(length: 60)]
+    #[ORM\Column(length: 60, unique: true)]
     private ?string $reference = null;
 
-    #[ORM\Column(length: 60)]
-    private ?string $email_address = null;
+    #[ORM\Column(length: 60, nullable: true)]
+    private ?string $emailAddress = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $additional_notes = null;
+    private ?string $additionalNotes = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -54,23 +50,26 @@ class Checkout
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
-    #[ORM\OneToMany(targetEntity: CheckoutItem::class, mappedBy: "checkout")]
-    private Collection $checkoutItems;
+    #[ORM\OneToMany(targetEntity: Sold::class, mappedBy: "order", cascade: ["persist"])]
+    private Collection $solds;
 
-    #[ORM\OneToMany(targetEntity: CheckoutPayment::class, mappedBy: "checkout")]
-    private Collection $checkoutPayments;
+    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: "order", cascade: ["persist"])]
+    private Collection $Payments;
 
     #[ORM\ManyToOne(targetEntity: Customer::class)]
-    #[ORM\JoinColumn(name: "customer_id", referencedColumnName: "unique_id")]
+    #[ORM\JoinColumn(name: "customer_id", referencedColumnName: "unique_id", onDelete: "SET NULL")]
     private Customer|null $customer = null;
 
-    #[ORM\ManyToOne(targetEntity: CustomerPostalAddress::class)]
-    #[ORM\JoinColumn(name: "address_id", referencedColumnName: "unique_id")]
-    private CustomerPostalAddress|null $postalAddress = null;
+    #[ORM\ManyToOne(targetEntity: Address::class)]
+    #[ORM\JoinColumn(name: "address_id", referencedColumnName: "unique_id", onDelete: "SET NULL")]
+    private Address|null $Address = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modifiedAt = null;
 
     public function __construct() {
-        $this->checkoutItems = new ArrayCollection();
-        $this->checkoutPayments = new ArrayCollection();
+        $this->solds = new ArrayCollection();
+        $this->Payments = new ArrayCollection();
     }
 
     public function getUniqueId(): ?string
@@ -85,26 +84,26 @@ class Checkout
         return $this;
     }
 
-    public function getCustomerId(): ?string
+    public function getCustomer(): ?Customer
     {
-        return $this->customerId;
+        return $this->customer;
     }
 
-    public function setCustomerId(string $customerId): self
+    public function setCustomer(Customer $customer): self
     {
-        $this->customerId = $customerId;
+        $this->customer = $customer;
 
         return $this;
     }
 
-    public function getAddressId(): ?string
+    public function getAddress(): ?Address
     {
-        return $this->addressId;
+        return $this->Address;
     }
 
-    public function setAddressId(string $addressId): self
+    public function setAddress(Address $Address): self
     {
-        $this->addressId = $addressId;
+        $this->Address = $Address;
 
         return $this;
     }
@@ -123,24 +122,24 @@ class Checkout
 
     public function getEmailAddress(): ?string
     {
-        return $this->email_address;
+        return $this->emailAddress;
     }
 
-    public function setEmailAddress(string $email_address): self
+    public function setEmailAddress(string $emailAddress): self
     {
-        $this->email_address = $email_address;
+        $this->emailAddress = $emailAddress;
 
         return $this;
     }
 
     public function getAdditionalNotes(): ?string
     {
-        return $this->additional_notes;
+        return $this->additionalNotes;
     }
 
-    public function setAdditionalNotes(?string $additional_notes): self
+    public function setAdditionalNotes(?string $additionalNotes): self
     {
-        $this->additional_notes = $additional_notes;
+        $this->additionalNotes = $additionalNotes;
 
         return $this;
     }
@@ -169,71 +168,51 @@ class Checkout
         return $this;
     }
 
-    public function getCustomer(): ?Customer
+    public function getSoldItems(): Collection
     {
-        return $this->customer;
+        return $this->solds;
     }
 
-    public function setCustomer(Customer $customer): self
+    public function addItemToSold(Sold $item): self
     {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
-    public function getPostalAddress(): ?CustomerPostalAddress
-    {
-        return $this->postalAddress;
-    }
-
-    public function setPostalAddress(CustomerPostalAddress $postalAddress): self
-    {
-        $this->postalAddress = $postalAddress;
-
-        return $this;
-    }
-
-    public function getCheckoutItems(): Collection
-    {
-        return $this->checkoutItems;
-    }
-
-    public function addCheckoutItem(CheckoutItem $item): self
-    {
-        if (!$this->checkoutItems->contains($item)) {
-            $this->checkoutItems->add($item);
+        if (!$this->solds->contains($item)) {
+            $this->solds->add($item);
+            $item->setOrder($this);
         }
 
         return $this;
     }
 
-    public function removeCheckoutItem(CheckoutItem $item): self
+    public function removeItemFromSold(Sold $item): self
     {
-        if ($this->checkoutItems->contains($item)) {
-            $this->checkoutItems->removeElement($item);
+        if ($this->solds->contains($item)) {
+            $this->solds->removeElement($item);
+            $item->setOrder(null);
         }
 
         return $this;
     }
 
-    public function getCheckoutPayments(): Collection
+    public function getPayments(): Collection
     {
-        return $this->checkoutPayments;
+        return $this->Payments;
     }
 
-    public function addCheckoutPayment(CheckoutPayment $payment): self
+    public function addPayment(Payment $payment): self
     {
-        if (!$this->checkoutPayments->contains($payment)) {
-            $this->checkoutPayments->add($payment);
+        if (!$this->Payments->contains($payment)) {
+            $this->Payments->add($payment);
+            $payment->setOrder($this);
         }
 
         return $this;
     }
 
-    public function removeCheckoutPayment(CheckoutPayment $payment): self
+    public function removePayment(Payment $payment): self
     {
-        if ($this->checkoutPayments->contains($payment)) {
-            $this->checkoutPayments->removeElement($payment);
+        if ($this->Payments->contains($payment)) {
+            $this->Payments->removeElement($payment);
+            $payment->setOrder(null);
         }
 
         return $this;
@@ -248,8 +227,6 @@ class Checkout
             $this->setUniqueId($uuid->toString());
         }
 
-        $this->setCustomerId($array["customerId"]);
-        $this->setAddressId($array["addressId"]);
         $this->setReference($array["reference"]);
         $this->setEmailAddress($array["emailAddress"]);
         $this->setAdditionalNotes($array["additionalNotes"]);
@@ -262,14 +239,30 @@ class Checkout
     public function populateArray(array $array = []): array
     {
         $array["uniqueId"] = $this->getUniqueId();
-        $array["customerId"] = $this->getCustomerId();
-        $array["addressId"] = $this->getAddressId();
+        $array["customerId"] = $this->getCustomer()->getUniqueId();
+        $array["addressId"] = $this->getAddress()->getUniqueId();
         $array["reference"] = $this->getReference();
         $array["emailAddress"] = $this->getEmailAddress();
         $array["additionalNotes"] = $this->getAdditionalNotes();
         $array["createdAt"] = $this->getCreatedAt()->format(DateTime::ATOM);
         $array["status"] = $this->getStatus();
+        $array["solds"] = $this->getSoldItems()
+            ->map(function (Sold $item) {
+                return $item->populateArray();
+            });
 
         return $array;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
     }
 }

@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\MessengerMessages;
+use App\Entity\Messenger;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<MessengerMessages>
+ * @extends ServiceEntityRepository<Messenger>
  *
- * @method MessengerMessages|null find($id, $lockMode = null, $lockVersion = null)
- * @method MessengerMessages|null findOneBy(array $criteria, array $orderBy = null)
- * @method MessengerMessages[]    findAll()
- * @method MessengerMessages[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Messenger|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Messenger|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Messenger[]    findAll()
+ * @method Messenger[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MessengerMessagesRepository extends ServiceEntityRepository
+class MessengerRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, MessengerMessages::class);
+        parent::__construct($registry, Messenger::class);
     }
 
-    public function save(MessengerMessages $entity, bool $flush = false): void
+    public function save(Messenger $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class MessengerMessagesRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(MessengerMessages $entity, bool $flush = false): void
+    public function remove(Messenger $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class MessengerMessagesRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return MessengerMessages[] Returns an array of MessengerMessages objects
+//     * @return Messenger[] Returns an array of Messenger objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class MessengerMessagesRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?MessengerMessages
+//    public function findOneBySomeField($value): ?Messenger
 //    {
 //        return $this->createQueryBuilder('m')
 //            ->andWhere('m.exampleField = :val')

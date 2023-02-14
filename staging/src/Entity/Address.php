@@ -2,16 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\CustomerPostalAddressRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\AddressRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
-#[ORM\Entity(repositoryClass: CustomerPostalAddressRepository::class)]
-#[ORM\Index(name: "customer_postal_address_idx", columns: ["status", "customer_id"])]
-class CustomerPostalAddress
+#[ORM\Entity(repositoryClass: AddressRepository::class)]
+#[ORM\Table("shop_addresses")]
+#[ORM\Index(name: "address_idx", columns: ["status", "customer_id"])]
+class Address
 {
     const STATUS_ACTIVE    = "active";
     const STATUS_INACTIVE  = "inactive";
@@ -23,9 +22,6 @@ class CustomerPostalAddress
     #[ORM\Id]
     #[ORM\Column(length: 36)]
     private ?string $uniqueId = null;
-
-    #[ORM\Column(length: 36)]
-    private ?string $customerId = null;
 
     #[ORM\Column(length: 120)]
     private ?string $street = null;
@@ -73,14 +69,14 @@ class CustomerPostalAddress
         return $this;
     }
 
-    public function getCustomerId(): ?string
+    public function getCustomer(): ?Customer
     {
-        return $this->customerId;
+        return $this->customer;
     }
 
-    public function setCustomerId(string $customerId): self
+    public function setCustomer(?Customer $customer): self
     {
-        $this->customerId = $customerId;
+        $this->customer = $customer;
 
         return $this;
     }
@@ -193,18 +189,6 @@ class CustomerPostalAddress
         return $this;
     }
 
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): self
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
     public function exchangeArray(array $array): self
     {
         if (in_array("uniqueId", array_keys($array))) {
@@ -214,7 +198,6 @@ class CustomerPostalAddress
             $this->setUniqueId($uuid->toString());
         }
 
-        $this->setCustomerId($array["customerId"]);
         $this->setStreet($array["street"]);
         $this->setPostalCode($array["postalCode"]);
         $this->setlocality($array["locality"]);
@@ -232,7 +215,7 @@ class CustomerPostalAddress
     public function populateArray(array $array = []): array
     {
         $array["uniqueId"]        = $this->getUniqueId();
-        $array["customerId"]      = $this->getCustomerId();
+        $array["customerId"]      = $this->getCustomer()->getUniqueId();
         $array["street"]          = $this->getStreet();
         $array["postalCode"]      = $this->getPostalCode();
         $array["locality"]        = $this->getlocality();

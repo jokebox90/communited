@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\ArticlePrice;
+use App\Entity\Price;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ArticlePrice>
+ * @extends ServiceEntityRepository<Price>
  *
- * @method ArticlePrice|null find($id, $lockMode = null, $lockVersion = null)
- * @method ArticlePrice|null findOneBy(array $criteria, array $orderBy = null)
- * @method ArticlePrice[]    findAll()
- * @method ArticlePrice[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Price|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Price|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Price[]    findAll()
+ * @method Price[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ArticlePriceRepository extends ServiceEntityRepository
+class PriceRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ArticlePrice::class);
+        parent::__construct($registry, Price::class);
     }
 
-    public function save(ArticlePrice $entity, bool $flush = false): void
+    public function save(Price $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class ArticlePriceRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(ArticlePrice $entity, bool $flush = false): void
+    public function remove(Price $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class ArticlePriceRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return ArticlePrice[] Returns an array of Price objects
+//     * @return Price[] Returns an array of Price objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class ArticlePriceRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?ArticlePrice
+//    public function findOneBySomeField($value): ?Price
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

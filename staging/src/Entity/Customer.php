@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[ORM\Table("shop_customers")]
 #[ORM\Index(name: "customer_idx", columns: ["status"])]
 class Customer
 {
@@ -18,13 +19,13 @@ class Customer
     const GRADE_VISITOR    = "visiteur";
     const GRADE_MEMBER     = "membre";
     const GRADE_AMBASSADOR = "ambassadeur";
-    const GRADE_FOUNDER    = "fondateur";
+    const GRADE_LEGEND    = "fondateur";
     const AVAILABLE_GRADES = [
         self::GRADE_CONTACT,
         self::GRADE_VISITOR,
         self::GRADE_MEMBER,
         self::GRADE_AMBASSADOR,
-        self::GRADE_FOUNDER,
+        self::GRADE_LEGEND,
     ];
 
     const STATUS_ACTIVE    = "actif";
@@ -47,19 +48,19 @@ class Customer
     #[ORM\Column(length: 30)]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 20, unique: true)]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $birthDate = null;
 
-    #[ORM\Column(length: 60)]
+    #[ORM\Column(length: 60, unique: true)]
     private ?string $emailAddress = null;
 
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
-    #[ORM\OneToMany(targetEntity: CustomerPostalAddress::class, mappedBy: "customer", cascade: ["persist"])]
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: "customer", cascade: ["persist"])]
     private Collection $postalAdress;
 
     public function __construct() {
@@ -114,12 +115,12 @@ class Customer
         return $this;
     }
 
-    public function getPostalAddress(): Collection
+    public function getAddress(): Collection
     {
         return $this->postalAdress;
     }
 
-    public function addPostalAddress(CustomerPostalAddress $address): self
+    public function addAddress(Address $address): self
     {
         if (!$this->postalAdress->contains($address)) {
             $this->postalAdress->add($address);
@@ -129,7 +130,7 @@ class Customer
         return $this;
     }
 
-    public function removePostalAddress(CustomerPostalAddress $address): self
+    public function removeAddress(Address $address): self
     {
         if ($this->postalAdress->contains($address)) {
             $this->postalAdress->removeElement($address);
@@ -204,22 +205,22 @@ class Customer
         $this->setBirthDate(DateTime::createFromFormat("Y-m-d", $array["birthDate"]));
         $this->setStatus($array["status"]);
 
-        for ($i = 0; $i < count($array["postalAddress"]); $i++) {
-            $addressArray = $array["postalAddress"][$i];
+        for ($i = 0; $i < count($array["Address"]); $i++) {
+            $addressArray = $array["Address"][$i];
 
             $predicate =
-                function  (int $key, CustomerPostalAddress $value) use ($addressArray) {
+                function  (int $key, Address $value) use ($addressArray) {
                     return $addressArray["uniqueId"] === $value->getUniqueId();
                 };
 
             if ($this->postalAdress->exists($predicate)) {
                 $address = $this->postalAdress->findFirst($predicate);
             } else {
-                $address = new CustomerPostalAddress();
+                $address = new Address();
             }
 
             $address->exchangeArray($addressArray);
-            $this->addPostalAddress($address);
+            $this->addAddress($address);
         }
 
         return $this;
@@ -235,8 +236,8 @@ class Customer
         $array["birthDate"] = $this->getBirthDate()->format("Y-m-d");
         $array["emailAddress"] = $this->getEmailAddress();
         $array["status"] = $this->getStatus();
-        $array["postalAddress"] = $this->getPostalAddress()
-            ->map(function (CustomerPostalAddress $address) {
+        $array["Address"] = $this->getAddress()
+            ->map(function (Address $address) {
                 return $address->populateArray();
             });
 

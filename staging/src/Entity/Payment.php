@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\CheckoutPaymentRepository;
+use App\Repository\PaymentRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
-#[ORM\Entity(repositoryClass: CheckoutPaymentRepository::class)]
-#[ORM\Index(name: "checkout_payment_ids", columns: ["unique_id", "checkout_id", "customer_id"])]
-class CheckoutPayment
+#[ORM\Entity(repositoryClass: PaymentRepository::class)]
+#[ORM\Table("shop_payments")]
+#[ORM\Index(name: "payment_idx", columns: ["unique_id", "order_id", "customer_id"])]
+class Payment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +22,7 @@ class CheckoutPayment
     private ?string $uniqueId = null;
 
     #[ORM\Column(length: 36)]
-    private ?string $checkoutId = null;
+    private ?string $orderId = null;
 
     #[ORM\Column(length: 36)]
     private ?string $customerId = null;
@@ -57,9 +58,9 @@ class CheckoutPayment
     #[ORM\JoinColumn(name: "customer_id", referencedColumnName: "unique_id")]
     private Customer|null $customer = null;
 
-    #[ORM\ManyToOne(targetEntity: Checkout::class, inversedBy: "checkoutPayments")]
-    #[ORM\JoinColumn(name: "checkout_id", referencedColumnName: "unique_id", nullable: false)]
-    private Checkout|null $checkout = null;
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: "Payments")]
+    #[ORM\JoinColumn(name: "order_id", referencedColumnName: "unique_id", nullable: false)]
+    private Order|null $order = null;
 
     public function getId(): ?int
     {
@@ -78,26 +79,26 @@ class CheckoutPayment
         return $this;
     }
 
-    public function getCheckoutId(): ?string
+    public function getCustomer(): ?Customer
     {
-        return $this->checkoutId;
+        return $this->customer;
     }
 
-    public function setCheckoutId(string $checkoutId): self
+    public function setCustomer(Customer $customer): self
     {
-        $this->checkoutId = $checkoutId;
+        $this->customer = $customer;
 
         return $this;
     }
 
-    public function getCustomerId(): ?string
+    public function getOrder(): ?Order
     {
-        return $this->customerId;
+        return $this->order;
     }
 
-    public function setCustomerId(string $customerId): self
+    public function setOrder(?Order $order): self
     {
-        $this->customerId = $customerId;
+        $this->order = $order;
 
         return $this;
     }
@@ -210,30 +211,6 @@ class CheckoutPayment
         return $this;
     }
 
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(Customer $customer): self
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
-    public function getCheckout(): ?Checkout
-    {
-        return $this->checkout;
-    }
-
-    public function setCheckout(Checkout $checkout): self
-    {
-        $this->checkout = $checkout;
-
-        return $this;
-    }
-
     public function exchangeArray(array $array): self
     {
         if (in_array("uniqueId", array_keys($array))) {
@@ -243,8 +220,6 @@ class CheckoutPayment
             $this->setUniqueId($uuid->toString());
         }
 
-        $this->setCheckoutId($array["checkoutId"]);
-        $this->setCustomerId($array["customerId"]);
         $this->setAmount($array["amount"]);
         $this->setUserAgent($array["userAgent"]);
         $this->setUserIP($array["userIP"]);
@@ -262,8 +237,8 @@ class CheckoutPayment
     {
         $array["id"] = $this->getId();
         $array["uniqueId"] = $this->getUniqueId();
-        $array["checkoutId"] = $this->getCheckoutId();
-        $array["customerId"] = $this->getCustomerId();
+        $array["orderId"] = $this->getOrder()->getUniqueId();
+        $array["customerId"] = $this->getCustomer()->getUniqueId();
         $array["amount"] = $this->getAmount();
         $array["userAgent"] = $this->getUserAgent();
         $array["userIP"] = $this->getUserIP();
