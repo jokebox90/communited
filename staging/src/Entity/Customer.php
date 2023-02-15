@@ -248,8 +248,8 @@ class Customer
         $this->setBirthDate(DateTime::createFromFormat("Y-m-d", $array["birthDate"]));
         $this->setStatus($array["status"]);
 
-        for ($i = 0; $i < count($array["Address"]); $i++) {
-            $addressArray = $array["Address"][$i];
+        for ($i = 0; $i < count($array["address"]); $i++) {
+            $addressArray = $array["address"][$i];
 
             $predicate =
                 function  (int $key, Address $value) use ($addressArray) {

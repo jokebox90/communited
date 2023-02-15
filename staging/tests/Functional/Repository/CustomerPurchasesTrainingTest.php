@@ -23,6 +23,8 @@ final class CustomerPurchasesTrainingTest extends RepositoryTestBase
 {
     public function testTheCustomerAddsAnItemToTheCart(): array
     {
+        $now = new DateTime();
+
         $training = $this->entityManager
             ->getRepository(Item::class)
             ->findOneBy(["title" => "Data Science"]);
@@ -34,6 +36,8 @@ final class CustomerPurchasesTrainingTest extends RepositoryTestBase
         $sold->setUniqueId($this->uuid->create());
         $sold->setPrice($training->getPrices()->first());
         $sold->setAdditionalNotes("En présentiel.");
+        $sold->setCreatedAt($now);
+        $sold->setModifiedAt($now);
 
         $orderId = $this->uuid->create();
         $order = new Order();
@@ -41,7 +45,6 @@ final class CustomerPurchasesTrainingTest extends RepositoryTestBase
         $order->setReference(OrderReferenceGenerator::create());
         $order->setAdditionalNotes("N/A");
 
-        $now = new DateTime();
         $order->setCreatedAt($now);
         $order->setModifiedAt($now);
         $order->setStatus(Order::STATUS_OPEN);
