@@ -88,7 +88,7 @@ final class CustomerPurchasesTrainingTest extends RepositoryTestBase
             "emailAddress"  => "sophie.lozofi@once.fr",
             "birthDate"     => $this->faker->dateTimeBetween('-99 year', '-13 years')->format("Y-m-d"),
             "status"        => Customer::STATUS_ACTIVE,
-            "Address" => [
+            "address" => [
                 [
                     "uniqueId"        => $this->uuid->create(),
                     "street"          => $this->faker->streetAddress(),

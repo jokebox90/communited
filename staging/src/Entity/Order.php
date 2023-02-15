@@ -227,6 +227,19 @@ class Order
             $this->setUniqueId($uuid->toString());
         }
 
+        $now = new DateTime();
+        if (in_array("createdAt", array_keys($array))) {
+            $this->setCreatedAt(DateTime::createFromFormat(DateTime::ATOM, $array["createdAt"]));
+        } else {
+            $this->setCreatedAt($now);
+        }
+
+        if (in_array("modifiedAt", array_keys($array))) {
+            $this->setModifiedAt(DateTime::createFromFormat(DateTime::ATOM, $array["modifiedAt"]));
+        } else {
+            $this->setModifiedAt($now);
+        }
+
         $this->setReference($array["reference"]);
         $this->setEmailAddress($array["emailAddress"]);
         $this->setAdditionalNotes($array["additionalNotes"]);
@@ -238,15 +251,16 @@ class Order
 
     public function populateArray(array $array = []): array
     {
-        $array["uniqueId"] = $this->getUniqueId();
-        $array["customerId"] = $this->getCustomer()->getUniqueId();
-        $array["addressId"] = $this->getAddress()->getUniqueId();
-        $array["reference"] = $this->getReference();
-        $array["emailAddress"] = $this->getEmailAddress();
+        $array["uniqueId"]        = $this->getUniqueId();
+        $array["customerId"]      = $this->getCustomer()->getUniqueId();
+        $array["addressId"]       = $this->getAddress()->getUniqueId();
+        $array["status"]          = $this->getStatus();
+        $array["createdAt"]       = $this->getCreatedAt()->format(DateTime::ATOM);
+        $array["modifiedAt"]      = $this->getModifiedAt()->format(DateTime::ATOM);
+        $array["reference"]       = $this->getReference();
+        $array["emailAddress"]    = $this->getEmailAddress();
         $array["additionalNotes"] = $this->getAdditionalNotes();
-        $array["createdAt"] = $this->getCreatedAt()->format(DateTime::ATOM);
-        $array["status"] = $this->getStatus();
-        $array["solds"] = $this->getSoldItems()
+        $array["solds"]           = $this->getSoldItems()
             ->map(function (Sold $item) {
                 return $item->populateArray();
             });

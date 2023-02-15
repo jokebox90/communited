@@ -2,18 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\MerchantRepository;
+use App\Repository\ContactRepository;
+use App\Service\UniqueIdGenerator;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Faker\UniqueGenerator;
 use Ramsey\Uuid\Uuid;
 
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity(repositoryClass: MerchantRepository::class)]
-#[ORM\Table("shop_merchants")]
-class Merchant
+#[ORM\Entity(repositoryClass: ContactRepository::class)]
+#[ORM\Table("shop_contacts")]
+class Contact
 {
     const STATUS_ACTIVE    = "actif";
     const STATUS_INACTIVE  = "inactif";
@@ -28,9 +27,6 @@ class Merchant
     #[ORM\Column(length: 36)]
     private ?string $uniqueId = null;
 
-    #[ORM\OneToMany(mappedBy: 'merchant', targetEntity: Contact::class, cascade: ["persist"])]
-    private Collection $contacts;
-
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
@@ -41,15 +37,12 @@ class Merchant
     private ?\DateTimeInterface $modifiedAt = null;
 
     #[ORM\Column(length: 60)]
-    private ?string $companyName = null;
-
-    #[ORM\Column(length: 30)]
-    private ?string $activity = null;
+    private ?string $contactName = null;
 
     #[ORM\Column(length: 60)]
     private ?string $emailAddress = null;
 
-    #[ORM\Column(length: 60)]
+    #[ORM\Column(length: 20)]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 120)]
@@ -64,16 +57,21 @@ class Merchant
     #[ORM\Column(length: 60)]
     private ?string $country = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $registrationDate = null;
+    #[ORM\Column(length: 14)]
+    private ?string $siret = null;
 
-    #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
-    private ?string $website = null;
+    #[ORM\Column(length: 12)]
+    private ?string $vat = null;
 
-    public function __construct()
-    {
-        $this->contacts = new ArrayCollection();
-    }
+    #[ORM\Column(length: 60)]
+    private ?string $role = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $additionalNotes = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contacts')]
+    #[ORM\JoinColumn(name: 'merchant_id', referencedColumnName: 'unique_id')]
+    private ?Merchant $merchant = null;
 
     public function getUniqueId(): ?string
     {
@@ -123,14 +121,38 @@ class Merchant
         return $this;
     }
 
-    public function getCompanyName(): ?string
+    public function getMerchant(): ?Merchant
     {
-        return $this->companyName;
+        return $this->merchant;
     }
 
-    public function setCompanyName(string $companyName): self
+    public function setMerchant(?Merchant $merchant): self
     {
-        $this->companyName = $companyName;
+        $this->merchant = $merchant;
+
+        return $this;
+    }
+
+    public function getContactName(): ?string
+    {
+        return $this->contactName;
+    }
+
+    public function setContactName(string $contactName): self
+    {
+        $this->contactName = $contactName;
+
+        return $this;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
 
         return $this;
     }
@@ -207,79 +229,49 @@ class Merchant
         return $this;
     }
 
-    public function getRegistrationDate(): ?\DateTimeInterface
+    public function getSiret(): ?string
     {
-        return $this->registrationDate;
+        return $this->siret;
     }
 
-    public function setRegistrationDate(\DateTimeInterface $registrationDate): self
+    public function setSiret(string $siret): self
     {
-        $this->registrationDate = $registrationDate;
+        $this->siret = $siret;
 
         return $this;
     }
 
-    public function getWebsite(): ?string
+    public function getVat(): ?string
     {
-        return $this->website;
+        return $this->vat;
     }
 
-    public function setWebsite(?string $website): self
+    public function setVat(string $vat): self
     {
-        $this->website = $website;
+        $this->vat = $vat;
 
         return $this;
     }
 
-    public function getActivity(): ?string
+    public function getAdditionalNotes(): ?string
     {
-        return $this->activity;
+        return $this->additionalNotes;
     }
 
-    public function setActivity(string $activity): self
+    public function setAdditionalNotes(string $additionalNotes): self
     {
-        $this->activity = $activity;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Contact>
-     */
-    public function getContacts(): Collection
-    {
-        return $this->contacts;
-    }
-
-    public function addContact(Contact $contact): self
-    {
-        if (!$this->contacts->contains($contact)) {
-            $this->contacts->add($contact);
-            $contact->setMerchant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContact(Contact $contact): self
-    {
-        if ($this->contacts->removeElement($contact)) {
-            // set the owning side to null (unless already changed)
-            if ($contact->getMerchant() === $this) {
-                $contact->setMerchant(null);
-            }
-        }
+        $this->additionalNotes = $additionalNotes;
 
         return $this;
     }
 
     public function exchangeArray(array $array):self
     {
-        if (in_array("uniqueId", array_keys($array))) {
+        if (in_array("merchantId", array_keys($array))) {
             $this->setUniqueId($array["uniqueId"]);
         } else {
-            $uuid = Uuid::uuid4();
-            $this->setUniqueId($uuid->toString());
+            $uuid = new UniqueIdGenerator();
+            $this->setUniqueId($uuid->create());
         }
 
         $now = new DateTime();
@@ -295,45 +287,40 @@ class Merchant
             $this->setModifiedAt($now);
         }
 
-        $this->setStatus($array["status"]);
-        $this->setCompanyName($array["companyName"]);
+        $this->setContactName($array["contactName"]);
+        $this->setRole($array["role"]);
         $this->setEmailAddress($array["emailAddress"]);
         $this->setPhoneNumber($array["phoneNumber"]);
         $this->setStreet($array["street"]);
         $this->setPostalCode($array["postalCode"]);
         $this->setLocality($array["locality"]);
         $this->setCountry($array["country"]);
-        $this->setRegistrationDate(DateTime::createFromFormat("Y-m-d", $array["registrationDate"]));
-        $this->setActivity($array["activity"]);
-        $this->setWebsite($array["website"]);
+        $this->setSiret($array["siret"]);
+        $this->setVat($array["vat"]);
+        $this->setAdditionalNotes($array["additionalNotes"]);
+        $this->setStatus($array["status"]);
 
         return $this;
     }
 
     public function populateArray(array $array = []): array
     {
-        $array["uniqueId"]         = $this->getUniqueId();
-        $array["status"]           = $this->getStatus();
-        $array["createdAt"]        = $this->getCreatedAt()->format(DateTime::ATOM);
-        $array["modifiedAt"]       = $this->getModifiedAt()->format(DateTime::ATOM);
-        $array["emailAddress"]     = $this->getEmailAddress();
-        $array["phoneNumber"]      = $this->getPhoneNumber();
-        $array["street"]           = $this->getStreet();
-        $array["postalCode"]       = $this->getPostalCode();
-        $array["locality"]         = $this->getLocality();
-        $array["country"]          = $this->getCountry();
-        $array["registrationDate"] = $this->getRegistrationDate();
-        $array["activity"]         = $this->getActivity();
-        $array["website"]          = $this->getWebsite();
+        $array["uniqueId"]        = $this->getUniqueId();
+        $array["merchantId"]      = $this->getMerchant()->getUniqueId();
+        $array["status"]          = $this->getStatus();
+        $array["createdAt"]       = $this->getCreatedAt()->format(DateTime::ATOM);
+        $array["modifiedAt"]      = $this->getModifiedAt()->format(DateTime::ATOM);
+        $array["contactName"]     = $this->getContactName();
+        $array["emailAddress"]    = $this->getEmailAddress();
+        $array["phoneNumber"]     = $this->getPhoneNumber();
+        $array["street"]          = $this->getStreet();
+        $array["postalCode"]      = $this->getPostalCode();
+        $array["locality"]        = $this->getLocality();
+        $array["country"]         = $this->getCountry();
+        $array["siret"]           = $this->getSiret();
+        $array["vat"]             = $this->getVat();
+        $array["additionalNotes"] = $this->getAdditionalNotes();
 
         return $array;
-    }
-
-    /**
-     * @return Collection<int, Price>
-     */
-    public function getPrices(): Collection
-    {
-        return $this->prices;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PriceRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
@@ -44,6 +45,10 @@ class Price
     #[ORM\JoinColumn(name: "item_id", referencedColumnName: "unique_id")]
     private Item|null $item = null;
 
+    #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'prices')]
+    #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'unique_id', nullable: false)]
+    private ?Contact $contact = null;
+
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
@@ -58,6 +63,11 @@ class Price
 
     #[ORM\Column(length: 120)]
     private ?string $description = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modifiedAt = null;
 
     public function getUniqueId(): ?string
     {
@@ -83,6 +93,18 @@ class Price
         return $this;
     }
 
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?Contact $contact): self
+    {
+        $this->contact = $contact;
+
+        return $this;
+    }
+
     public function getStatus(): ?string
     {
         return $this->status;
@@ -91,6 +113,30 @@ class Price
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
 
         return $this;
     }
@@ -152,6 +198,19 @@ class Price
             $this->setUniqueId($uuid->toString());
         }
 
+        $now = new DateTime();
+        if (in_array("createdAt", array_keys($array))) {
+            $this->setCreatedAt(DateTime::createFromFormat(DateTime::ATOM, $array["createdAt"]));
+        } else {
+            $this->setCreatedAt($now);
+        }
+
+        if (in_array("modifiedAt", array_keys($array))) {
+            $this->setModifiedAt(DateTime::createFromFormat(DateTime::ATOM, $array["modifiedAt"]));
+        } else {
+            $this->setModifiedAt($now);
+        }
+
         $this->setDescription($array["description"]);
         $this->setAmount($array["amount"]);
         $this->setDuration($array["duration"]);
@@ -164,12 +223,14 @@ class Price
     public function populateArray(array $array = []): array
     {
         $array["uniqueId"] = $this->getUniqueId();
+        $array["status"]          = $this->getStatus();
+        $array["createdAt"]       = $this->getCreatedAt()->format(DateTime::ATOM);
+        $array["modifiedAt"]      = $this->getModifiedAt()->format(DateTime::ATOM);
         $array["itemId"] = $this->getItem()->getUniqueId();
         $array["description"] = $this->getDescription();
         $array["amount"] = $this->getAmount();
         $array["duration"] = $this->getDuration();
         $array["frequency"] = $this->getFrequency();
-        $array["status"] = $this->getStatus();
 
         return $array;
     }

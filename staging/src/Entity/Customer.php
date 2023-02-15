@@ -40,6 +40,15 @@ class Customer
     private ?string $uniqueId = null;
 
     #[ORM\Column(length: 20)]
+    private ?string $status = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modifiedAt = null;
+
+    #[ORM\Column(length: 20)]
     private ?string $grade = null;
 
     #[ORM\Column(length: 30)]
@@ -57,9 +66,6 @@ class Customer
     #[ORM\Column(length: 60, unique: true)]
     private ?string $emailAddress = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $status = null;
-
     #[ORM\OneToMany(targetEntity: Address::class, mappedBy: "customer", cascade: ["persist"])]
     private Collection $postalAdress;
 
@@ -75,6 +81,67 @@ class Customer
     public function setUniqueId(string $uniqueId): self
     {
         $this->uniqueId = $uniqueId;
+
+        return $this;
+    }
+
+    public function getAddress(): Collection
+    {
+        return $this->postalAdress;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->postalAdress->contains($address)) {
+            $this->postalAdress->add($address);
+            $address->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->postalAdress->contains($address)) {
+            $this->postalAdress->removeElement($address);
+            $address->setCustomer(null);
+        }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
 
         return $this;
     }
@@ -115,31 +182,6 @@ class Customer
         return $this;
     }
 
-    public function getAddress(): Collection
-    {
-        return $this->postalAdress;
-    }
-
-    public function addAddress(Address $address): self
-    {
-        if (!$this->postalAdress->contains($address)) {
-            $this->postalAdress->add($address);
-            $address->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAddress(Address $address): self
-    {
-        if ($this->postalAdress->contains($address)) {
-            $this->postalAdress->removeElement($address);
-            $address->setCustomer(null);
-        }
-
-        return $this;
-    }
-
     public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
@@ -176,18 +218,6 @@ class Customer
         return $this;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function exchangeArray(array $array): self
     {
         if (in_array("uniqueId", array_keys($array))) {
@@ -195,6 +225,19 @@ class Customer
         } else {
             $uuid = Uuid::uuid4();
             $this->setUniqueId($uuid->toString());
+        }
+
+        $now = new DateTime();
+        if (in_array("createdAt", array_keys($array))) {
+            $this->setCreatedAt(DateTime::createFromFormat(DateTime::ATOM, $array["createdAt"]));
+        } else {
+            $this->setCreatedAt($now);
+        }
+
+        if (in_array("modifiedAt", array_keys($array))) {
+            $this->setModifiedAt(DateTime::createFromFormat(DateTime::ATOM, $array["modifiedAt"]));
+        } else {
+            $this->setModifiedAt($now);
         }
 
         $this->setFirstName($array["firstName"]);

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ItemRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -184,11 +185,24 @@ class Item
             $this->setUniqueId($uuid->toString());
         }
 
+        $now = new DateTime();
+        if (in_array("createdAt", array_keys($array))) {
+            $this->setCreatedAt($array["createdAt"]);
+        } else {
+            $this->setCreatedAt($now);
+        }
+
+        if (in_array("modifiedAt", array_keys($array))) {
+            $this->setModifiedAt($array["modifiedAt"]);
+        } else {
+            $this->setModifiedAt($now);
+        }
+
+        $this->setStatus($array["status"]);
         $this->setTitle($array["title"]);
         $this->setDescription($array["description"]);
         $this->setAvailable($array["available"]);
         $this->setTags($array["tags"]);
-        $this->setStatus($array["status"]);
 
         for ($i = 0; $i < count($array["prices"]); $i++) {
             $priceArray = $array["prices"][$i];
@@ -207,18 +221,19 @@ class Item
             $price->exchangeArray($priceArray);
             $this->addPrice($price);
         }
+
         return $this;
     }
 
     public function populateArray(array $array = []): array
     {
-        $array["uniqueId"] = $this->getUniqueId();
-        $array["title"] = $this->getTitle();
+        $array["uniqueId"]     = $this->getUniqueId();
+        $array["title"]       = $this->getTitle();
         $array["description"] = $this->getDescription();
-        $array["available"] = $this->getAvailable();
-        $array["tags"] = $this->getTags();
-        $array["status"] = $this->getStatus();
-        $array["prices"] = $this->getPrices()
+        $array["available"]   = $this->getAvailable();
+        $array["tags"]        = $this->getTags();
+        $array["status"]      = $this->getStatus();
+        $array["prices"]      = $this->getPrices()
             ->map(function (Price $price) {
                 return $price->populateArray();
             });

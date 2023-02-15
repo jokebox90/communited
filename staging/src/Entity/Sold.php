@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SoldRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
@@ -27,6 +28,12 @@ class Sold
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $additionalNotes = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modifiedAt = null;
+
     public function getUniqueId(): ?string
     {
         return $this->uniqueId;
@@ -47,6 +54,30 @@ class Sold
     public function setOrder(?Order $order): self
     {
         $this->order = $order;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
 
         return $this;
     }
@@ -84,6 +115,19 @@ class Sold
             $this->setUniqueId($uuid->toString());
         }
 
+        $now = new DateTime();
+        if (in_array("createdAt", array_keys($array))) {
+            $this->setCreatedAt(DateTime::createFromFormat(DateTime::ATOM, $array["createdAt"]));
+        } else {
+            $this->setCreatedAt($now);
+        }
+
+        if (in_array("modifiedAt", array_keys($array))) {
+            $this->setModifiedAt(DateTime::createFromFormat(DateTime::ATOM, $array["modifiedAt"]));
+        } else {
+            $this->setModifiedAt($now);
+        }
+
         $this->setAdditionalNotes($array["additionalNotes"]);
 
         return $this;
@@ -94,6 +138,8 @@ class Sold
         $array["uniqueId"] = $this->getUniqueId();
         $array["orderId"] = $this->getOrder()->getUniqueId();
         $array["priceId"] = $this->getPrice()->getUniqueId();
+        $array["createdAt"]       = $this->getCreatedAt()->format(DateTime::ATOM);
+        $array["modifiedAt"]      = $this->getModifiedAt()->format(DateTime::ATOM);
         $array["additionalNotes"] = $this->getAdditionalNotes();
 
         return $array;

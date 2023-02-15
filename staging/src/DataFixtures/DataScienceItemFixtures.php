@@ -3,13 +3,15 @@
 namespace App\DataFixtures;
 
 use App\Entity\Item;
+use App\Entity\Merchant;
 use App\Service\UniqueIdGenerator;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class DataScienceItemFixtures extends Fixture implements FixtureGroupInterface
+class DataScienceItemFixtures extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     private UniqueIdGenerator|null $uuid = null;
 
@@ -59,6 +61,7 @@ class DataScienceItemFixtures extends Fixture implements FixtureGroupInterface
             ],
         ];
 
+
         $newItem = new Item();
         $newItem->exchangeArray($array);
 
@@ -66,8 +69,22 @@ class DataScienceItemFixtures extends Fixture implements FixtureGroupInterface
         $newItem->setCreatedAt($now);
         $newItem->setModifiedAt($now);
 
+        $merchantRepository = $manager->getRepository(Merchant::class);
+        $school = $merchantRepository->findOneBy(["companyName" => "BornToCode"]);
+        $coach = $school->getContacts()->first();
+        foreach($newItem->getPrices() as $price) {
+            $price->setContact($coach);
+        }
+
         $manager->persist($newItem);
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            MerchantFixtures::class,
+        ];
     }
 
     public static function getGroups(): array

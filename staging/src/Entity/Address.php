@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
@@ -57,6 +58,12 @@ class Address
     #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'unique_id')]
     private Customer|null $customer = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modifiedAt = null;
+
     public function getUniqueId(): ?string
     {
         return $this->uniqueId;
@@ -77,6 +84,42 @@ class Address
     public function setCustomer(?Customer $customer): self
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
 
         return $this;
     }
@@ -198,6 +241,20 @@ class Address
             $this->setUniqueId($uuid->toString());
         }
 
+        $now = new DateTime();
+        if (in_array("createdAt", array_keys($array))) {
+            $this->setCreatedAt(DateTime::createFromFormat(DateTime::ATOM, $array["createdAt"]));
+        } else {
+            $this->setCreatedAt($now);
+        }
+
+        if (in_array("modifiedAt", array_keys($array))) {
+            $this->setModifiedAt(DateTime::createFromFormat(DateTime::ATOM, $array["modifiedAt"]));
+        } else {
+            $this->setModifiedAt($now);
+        }
+
+        $this->setStatus($array["status"]);
         $this->setStreet($array["street"]);
         $this->setPostalCode($array["postalCode"]);
         $this->setlocality($array["locality"]);
@@ -207,7 +264,6 @@ class Address
         $this->setEntryCode($array["entryCode"]);
         $this->setIntercom($array["intercom"]);
         $this->setAdditionalNotes($array["additionalNotes"]);
-        $this->setStatus($array["status"]);
 
         return $this;
     }
@@ -216,6 +272,9 @@ class Address
     {
         $array["uniqueId"]        = $this->getUniqueId();
         $array["customerId"]      = $this->getCustomer()->getUniqueId();
+        $array["status"]          = $this->getStatus();
+        $array["createdAt"]       = $this->getCreatedAt()->format(DateTime::ATOM);
+        $array["modifiedAt"]      = $this->getModifiedAt()->format(DateTime::ATOM);
         $array["street"]          = $this->getStreet();
         $array["postalCode"]      = $this->getPostalCode();
         $array["locality"]        = $this->getlocality();
@@ -225,20 +284,7 @@ class Address
         $array["entryCode"]       = $this->getEntryCode();
         $array["intercom"]        = $this->getIntercom();
         $array["additionalNotes"] = $this->getAdditionalNotes();
-        $array["status"]          = $this->getStatus();
 
         return $array;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
     }
 }

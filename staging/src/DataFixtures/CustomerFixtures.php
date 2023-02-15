@@ -40,7 +40,7 @@ final class CustomerFixtures extends Fixture
 
             $Address = [];
             for ($j = 0; $j < self::POSTAL_ADDRESS_COUNTER; $j++) {
-                $Address[] = [
+                $address[] = [
                     "uniqueId"        => (Uuid::uuid4())->toString(),
                     "customerId"      => $customerId,
                     "street"          => $this->faker->streetAddress(),
@@ -64,15 +64,15 @@ final class CustomerFixtures extends Fixture
             }
 
             $customerArray = [
-                "uniqueId"      => $customerId,
-                "firstName"     => $this->faker->firstName(),
-                "lastName"      => $this->faker->lastName(),
-                "grade"         => $this->faker->randomElement(Customer::AVAILABLE_GRADES),
-                "phoneNumber"   => $this->faker->phoneNumber(),
-                "emailAddress"  => $this->faker->email(),
-                "birthDate"     => $this->faker->dateTimeBetween('-99 year', '-13 years')->format("Y-m-d"),
-                "status"        => $this->faker->randomElement(Customer::AVAILABLE_STATUS),
-                "Address" => $Address,
+                "uniqueId"     => $customerId,
+                "firstName"    => $this->faker->firstName(),
+                "lastName"     => $this->faker->lastName(),
+                "grade"        => $this->faker->randomElement(Customer::AVAILABLE_GRADES),
+                "phoneNumber"  => $this->faker->phoneNumber(),
+                "emailAddress" => $this->faker->email(),
+                "birthDate"    => $this->faker->dateTimeBetween('-99 year', '-13 years')->format("Y-m-d"),
+                "status"       => $this->faker->randomElement(Customer::AVAILABLE_STATUS),
+                "address"      => $address,
             ];
 
             $newCustomer = new Customer();

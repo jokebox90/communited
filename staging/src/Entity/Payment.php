@@ -13,19 +13,18 @@ use Ramsey\Uuid\Uuid;
 #[ORM\Index(name: "payment_idx", columns: ["unique_id", "order_id", "customer_id"])]
 class Payment
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    const STATUS_OPEN    = "ouvert";
+    const STATUS_SUCCESS = "succès";
+    const STATUS_FAILED  = "echec";
+    const AVAILABLE_STATUS = [
+        self::STATUS_OPEN,
+        self::STATUS_SUCCESS,
+        self::STATUS_FAILED,
+    ];
 
+    #[ORM\Id]
     #[ORM\Column(length: 36)]
     private ?string $uniqueId = null;
-
-    #[ORM\Column(length: 36)]
-    private ?string $orderId = null;
-
-    #[ORM\Column(length: 36)]
-    private ?string $customerId = null;
 
     #[ORM\Column]
     private ?float $amount = null;
@@ -61,6 +60,9 @@ class Payment
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: "Payments")]
     #[ORM\JoinColumn(name: "order_id", referencedColumnName: "unique_id", nullable: false)]
     private Order|null $order = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modifiedAt = null;
 
     public function getId(): ?int
     {
@@ -99,6 +101,42 @@ class Payment
     public function setOrder(?Order $order): self
     {
         $this->order = $order;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getModifiedAt(): ?\DateTimeInterface
+    {
+        return $this->modifiedAt;
+    }
+
+    public function setModifiedAt(\DateTimeInterface $modifiedAt): self
+    {
+        $this->modifiedAt = $modifiedAt;
 
         return $this;
     }
@@ -187,30 +225,6 @@ class Payment
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function exchangeArray(array $array): self
     {
         if (in_array("uniqueId", array_keys($array))) {
@@ -218,6 +232,19 @@ class Payment
         } else {
             $uuid = Uuid::uuid4();
             $this->setUniqueId($uuid->toString());
+        }
+
+        $now = new DateTime();
+        if (in_array("createdAt", array_keys($array))) {
+            $this->setCreatedAt(DateTime::createFromFormat(DateTime::ATOM, $array["createdAt"]));
+        } else {
+            $this->setCreatedAt($now);
+        }
+
+        if (in_array("modifiedAt", array_keys($array))) {
+            $this->setModifiedAt(DateTime::createFromFormat(DateTime::ATOM, $array["modifiedAt"]));
+        } else {
+            $this->setModifiedAt($now);
         }
 
         $this->setAmount($array["amount"]);
@@ -235,19 +262,19 @@ class Payment
 
     public function populateArray(array $array = []): array
     {
-        $array["id"] = $this->getId();
-        $array["uniqueId"] = $this->getUniqueId();
-        $array["orderId"] = $this->getOrder()->getUniqueId();
-        $array["customerId"] = $this->getCustomer()->getUniqueId();
-        $array["amount"] = $this->getAmount();
-        $array["userAgent"] = $this->getUserAgent();
-        $array["userIP"] = $this->getUserIP();
-        $array["cardName"] = $this->getCardName();
-        $array["cardNumber"] = $this->getCardNumber();
-        $array["cardType"] = $this->getCardType();
+        $array["uniqueId"]        = $this->getUniqueId();
+        $array["orderId"]         = $this->getOrder()->getUniqueId();
+        $array["customerId"]      = $this->getCustomer()->getUniqueId();
+        $array["status"]          = $this->getStatus();
+        $array["createdAt"]       = $this->getCreatedAt()->format(DateTime::ATOM);
+        $array["modifiedAt"]      = $this->getModifiedAt()->format(DateTime::ATOM);
+        $array["amount"]          = $this->getAmount();
+        $array["userAgent"]       = $this->getUserAgent();
+        $array["userIP"]          = $this->getUserIP();
+        $array["cardName"]        = $this->getCardName();
+        $array["cardNumber"]      = $this->getCardNumber();
+        $array["cardType"]        = $this->getCardType();
         $array["additionalNotes"] = $this->getAdditionalNotes();
-        $array["createdAt"] = $this->getCreatedAt()->format(DateTime::ATOM);
-        $array["status"] = $this->getStatus();
 
         return $array;
     }
