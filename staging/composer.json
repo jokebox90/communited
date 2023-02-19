@@ -32,7 +32,10 @@
         "symfony/doctrine-messenger": "^6.2",
         "symfony/twig-bundle": "^6.2",
         "ramsey/uuid": "^4.7",
-        "symfony/security-bundle": "^6.2"
+        "symfony/security-bundle": "^6.2",
+        "symfonycasts/verify-email-bundle": "^1.13",
+        "symfony/form": "^6.2",
+        "symfony/http-foundation": "^6.2"
     },
     "license": "MPL 2.0",
     "autoload": {
