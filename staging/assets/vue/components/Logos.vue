@@ -1,29 +1,27 @@
 <template>
-  <div class="row mb-5">
-    <div class="col-12 text-center">
-      <p class="fs-4">Application développée avec</p>
-      <p class="fs-2 text-info">
-        Symfony - VueJS - Bootstrap
-      </p>
-    </div>
+  <div class="mb-12 flex flex-col items-center justify-center mx-auto w-max text-center">
+    <p class="text-xl italic font-serif">Application développée avec</p>
+    <p class="text-3xl">
+      Symfony - VueJS - TailwindCSS
+    </p>
   </div>
 
-  <div class="row mb-5">
-    <div class="col-4">
-      <img src="https://symfony.com/logos/symfony_black_03.svg" alt="Logo Symfony" class="logo-sf">
+  <div class="mb-12 flex flex-row justify-center gap-12 w-min mx-auto">
+    <div class="w-60 h-60">
+      <img src="https://symfony.com/logos/symfony_black_03.svg" alt="Logo Symfony" class="w-full h-full">
     </div>
-    <div class="col-4">
+    <div class="w-60 h-60">
       <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Vue.js_Logo_2.svg" alt="Logo VueJS"
-        class="logo-vue">
+        class="w-full h-full">
     </div>
-    <div class="col-4">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Bootstrap_logo.svg" alt="Logo Bootstrap"
-        class="logo-bs">
+    <div class="w-60 h-60">
+      <img src="https://tailwindcss.com/_next/static/media/tailwindcss-mark.79614a5f61617ba49a0891494521226b.svg" alt="Logo Bootstrap"
+        class="w-full h-full">
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .col-4 {
   display: flex;
   align-items: center;

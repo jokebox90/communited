@@ -1,15 +1,16 @@
 <template>
-  <Logos />
+  <div class="d-flex flex-column align-items-center pt-5 col-sm-6 mx-auto">
+    <Logos />
 
-  <Navigation />
+    <div id="greeter">
+      <Title random-color>
+        Vous êtes ici: {{ name }}!
+      </Title>
 
-  <div id="greeter">
-    <PageTitle random-color>
-      Vous êtes ici: {{ name }}!
-    </PageTitle>
-
-    <h4>{{ message }}!</h4>
-    <p>{{ path }}!</p>
+      <h4>{{ message }}!</h4>
+      <p>{{ path }}!</p>
+      <p>{{ hit }}!</p>
+    </div>
   </div>
 </template>
 
@@ -17,15 +18,17 @@
 import _ from "lodash";
 import Navigation from "../components/Navigation.vue";
 import Logos from "../components/Logos.vue";
-import PageTitle from "../components/PageTitle.vue";
+import Title from "../components/Title.vue";
+
 defineProps({
   name: String,
   message: String,
   path: String,
+  hit: Number,
 });
 </script>
 
-<style lang="scss">
+<style scoped>
 #home {
   min-height: 100vh;
   height: auto;
