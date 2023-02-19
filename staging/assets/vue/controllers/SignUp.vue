@@ -2,31 +2,17 @@
 // assets/vue/controllers/SignUp.vue
 
 import _ from "lodash";
-import { onMounted, reactive } from 'vue';
-import { toast } from 'vue3-toastify';
-import "vue3-toastify/dist/index.css";
-import http from "../services/http";
+import { reactive } from 'vue';
+import http from "../http";
+import { success, warning } from "../helpers/toasts";
 import Title from "../components/Title.vue";
 import Description from "../components/Description.vue";
-import Navigation from "../components/Navigation.vue";
 
 const state = reactive({
   password: "",
   showPassword: false,
   registerStatus: "Idle",
 })
-
-async function notify(message) {
-  toast(message);
-}
-
-async function success(message) {
-  toast.success(message);
-}
-
-async function warning(message) {
-  toast.warning(message);
-}
 
 async function registerUser(fields) {
   const { data, status } = await http.post("/sign-up", {
@@ -38,7 +24,7 @@ async function registerUser(fields) {
 
   if (status === 201) {
     state.registerStatus = "Success";
-    success("Vous êtes bien enregistré !");
+    await success("Vous êtes bien enregistré !");
   } else if (status === 400) {
     state.registerStatus = "Error";
     _.map(data.messages, async (m) => await warning(m));
@@ -69,10 +55,10 @@ function generatePassword() {
 </script>
 
 <template>
-  <div class="h-full flex flex-col justify-center items-center gap-12">
-    <div class="w-full max-w-sm flex flex-col items-center justify-center gap-6">
-      <div class="text-center">
-        <Title random-color>
+  <div class="flex flex-col justify-start items-center gap-12">
+    <div class="w-full max- flex flex-col items-center justify-center gap-6">
+      <div class="text-center pt-24 bg-gradient-to-t from-zinc-600 to-zinc-700 w-full border-b-2 border-rose-700">
+        <Title class="text-rose-600">
           Inscription
         </Title>
 
@@ -88,7 +74,7 @@ function generatePassword() {
         @submit="registerUser"
         :actions="false"
       >
-        <div class="w-full max-w-sm flex flex-col gap-3">
+        <div class="w-full max-w-sm pt-6 flex flex-col gap-3">
           <FormKit
             type="text"
             name="username"

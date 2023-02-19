@@ -4,6 +4,8 @@ import Navigation from "./components/Navigation.vue";
 </script>
 
 <template>
-  <Navigation />
-  <router-view />
+  <div id="app" class="bg-teal-700 text-white h-full">
+    <Navigation />
+    <router-view />
+  </div>
 </template>
