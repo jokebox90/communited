@@ -1,16 +1,26 @@
-/*
- * Welcome to your app"s main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
+// assets/app.js
 
-// any CSS you import will output into a single css file (app.css in this case)
-import "./styles/app.scss";
+import "./styles/app.css";
 
-// start the Stimulus application
-import "./bootstrap";
+import { createApp } from "vue";
+import { plugin, defaultConfig } from "@formkit/vue";
+import Vue3Toastify from "vue3-toastify";
+import config from "../formKit.config";
+import App from "./vue/App.vue";
+import router from "./vue/router";
+import vue3ToastifyConfig from "./vue/vue3-toastify";
+import feather from "feather-icons";
 
-// Include Bootstrap styles
-import "@popperjs/core";
-import "bootstrap";
+const app = createApp(App);
+
+app.use(plugin, defaultConfig(config));
+console.log("FormKit is running ...");
+
+app.use(Vue3Toastify, vue3ToastifyConfig);
+console.log("Vue3 Toastify is running ...");
+
+app.use(router);
+console.log("VueRouter is running ...");
+
+app.mount("#root");
+feather.replace();
