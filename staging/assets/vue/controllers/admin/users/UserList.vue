@@ -31,8 +31,8 @@ onBeforeMount(async () => {
 
 <template>
   <Hero
-    title="Mon compte"
-    description="Retrouvez toutes les informations de votre compte utilisateur."
+    title="Liste des utilisateurs"
+    description="Retrouvez tous les utilisateurs de l'application."
   />
 
   <div class="w-full px-3 py-8">
