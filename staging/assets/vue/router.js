@@ -58,7 +58,7 @@ async function canUserAccess(to) {
   const userStore = useUserStore();
 
   if (to.meta.publicZone && userStore.isAuthenticated) {
-    await warning("Vous n'êtes pas connecté.");
+    await warning("Vous êtes déjà connecté.");
     return false;
   }
 

@@ -1,26 +1,9 @@
 import _ from "lodash";
-import http from "./http";
-import { success, warning } from "./toasts";
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
-
-export function getAuth() {
-  const raw = localStorage.getItem("app:auth");
-  if (_.isNull(raw)) return null;
-  const auth = JSON.parse(raw);
-  return auth;
-}
-
-export function setAuth(options) {
-  if (_.isNull(options)) {
-    localStorage.removeItem("app:auth");
-    return;
-  }
-
-  const current = _.defaultTo(getAuth(), {});
-  const raw = JSON.stringify(_.assign(current, options));
-  localStorage.setItem("app:auth", raw);
-}
+import { ref } from "vue";
+import http from "./http";
+import { getAuth, setAuth } from "./auth";
+import { success, warning } from "./toasts";
 
 export const useUserStore = defineStore("user", () => {
   const auth = getAuth();

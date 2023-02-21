@@ -15,4 +15,11 @@ class FrontController extends AbstractController
     {
         return $this->render("front.html.twig");
     }
+
+    #[IsGranted('IS_AUTHENTICATED')]
+    #[Route("/admin/{path<.+>}", name: "app:admin")]
+    public function secured(): Response
+    {
+        return $this->render("front.html.twig");
+    }
 }

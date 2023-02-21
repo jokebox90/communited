@@ -209,7 +209,7 @@ class UserController extends AbstractController
         });
 
         return new JsonResponse([
-            "users"  => $jsonData->toArray(),
+            "users" => $jsonData->toArray(),
         ], Response::HTTP_OK);
     }
 }
