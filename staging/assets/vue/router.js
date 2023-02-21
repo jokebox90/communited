@@ -9,6 +9,7 @@ import SignIn from "./controllers/SignIn.vue";
 import SignOut from "./controllers/SignOut.vue";
 import SignUp from "./controllers/SignUp.vue";
 import MyAccount from "./controllers/MyAccount.vue";
+import UserList from "./controllers/admin/users/UserList.vue";
 import _ from "lodash";
 import { warning } from "./helpers/toasts";
 
@@ -38,6 +39,12 @@ const routes = [
     path: "/site/my-account",
     component: MyAccount,
     name: "my-account",
+    meta: { requiresAuth: true, backTo: "sign-in" },
+  },
+  {
+    path: "/admin/users",
+    component: UserList,
+    name: "user-list",
     meta: { requiresAuth: true, backTo: "sign-in" },
   },
 ];

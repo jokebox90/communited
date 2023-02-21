@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\UniqueIdGenerator;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +20,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -187,6 +189,27 @@ class UserController extends AbstractController
         return new JsonResponse([
             "userName"  => $user->getUserName(),
             "userEmail" => $user->getEmail(),
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * @var User $user
+     */
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/api/users', name: 'app:users:list')]
+    public function userList(UserRepository $repository): Response
+    {
+        $results = new ArrayCollection($repository->findAll());
+        $jsonData = $results->map(function(User $user) {
+            return [
+                "userId"    => $user->getUniqueId(),
+                "userName"  => $user->getUsername(),
+                "userEmail" => $user->getEmail(),
+            ];
+        });
+
+        return new JsonResponse([
+            "users"  => $jsonData->toArray(),
         ], Response::HTTP_OK);
     }
 }

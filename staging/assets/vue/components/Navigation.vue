@@ -125,6 +125,19 @@ const defaultClass = "w-full flex flex-col items-end py-3 pr-3 bg-slate-900 px-3
           <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
             <div
               class="bg-zinc-100 rounded-full w-full mb-3">
+              <button
+                v-on:click="() =>navigateTo('user-list')"
+                class="m-0 px-4 py-2 text-black flex justify-end gap-3"
+              >
+                Utilisateurs
+                <i data-feather="globe"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
+            <div
+              class="bg-zinc-100 rounded-full w-full mb-3">
               <button v-on:click="() =>navigateTo('my-account')" class="m-0 px-4 py-2 text-black flex justify-end gap-3">
                 Compte
                 <i data-feather="globe"></i>

@@ -47,6 +47,9 @@ Encore
   .enableSourceMaps(!Encore.isProduction())
   // enables hashed filenames (e.g. app.abc123.css)
   .enableVersioning(Encore.isProduction())
+  .addAliases({
+    "@": path.resolve(__dirname, 'assets', 'vue'),
+  })
 
   // configure Babel
   // .configureBabel((config) => {
@@ -87,4 +90,5 @@ Encore
     runtimeCompilerBuild: false,
   });
 
-module.exports = Encore.getWebpackConfig();
+const config = Encore.getWebpackConfig();
+module.exports = config;
