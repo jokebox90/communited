@@ -47,11 +47,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    // public function getId(): ?string
-    // {
-    //     return $this->uniqueId;
-    // }
-
     public function getUniqueId(): ?string
     {
         return $this->uniqueId;

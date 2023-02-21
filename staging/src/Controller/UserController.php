@@ -9,16 +9,24 @@ use App\Service\UniqueIdGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
-class SignUpController extends AbstractController
+/**
+ * @property UrlGeneratorInterface $urlGenerator
+ * @method   User|null             getUser
+ */
+class UserController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
 
@@ -27,8 +35,8 @@ class SignUpController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/api/sign-up', methods: ["POST"], name: 'app:sign-up:check')]
-    public function register(
+    #[Route('/api/sign-up', methods: ["POST"], name: 'app:sign-up')]
+    public function signUp(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
@@ -76,6 +84,11 @@ class SignUpController extends AbstractController
             $userPasswordHasher->hashPassword($user, $password)
         );
 
+        $count = $entityManager->getRepository(User::class)->countAll();
+        if ($count === 0) {
+            $user->setRoles(["ROLE_ADMIN"]);
+        }
+
         $entityManager->persist($user);
         $entityManager->flush();
 
@@ -89,7 +102,7 @@ class SignUpController extends AbstractController
         );
 
         return new JsonResponse([
-            "next" => $this->generateUrl('app:home')
+            "next" => $this->generateUrl('app:front')
         ], 201);
     }
 
@@ -99,13 +112,13 @@ class SignUpController extends AbstractController
         $id = $request->get('id');
 
         if (null === $id) {
-            return $this->redirectToRoute('app:sign-up');
+            return $this->redirectToRoute('app:front');
         }
 
         $user = $userRepository->find($id);
 
         if (null === $user) {
-            return $this->redirectToRoute('app:sign-up');
+            return $this->redirectToRoute('app:front');
         }
 
         // validate email confirmation link, sets User::isVerified=true and persists
@@ -114,12 +127,66 @@ class SignUpController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
 
-            return $this->redirectToRoute('app:sign-up');
+            return $this->redirectToRoute('app:front');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app:sign-up');
+        return $this->redirectToRoute('app:front');
+    }
+
+    #[Route('/api/sign-in', methods: ["POST"], name: 'app:sign-in')]
+    public function sighIn(#[CurrentUser]$user = null): Response
+    {
+        if (!$user) {
+            return new JsonResponse([
+                "message" => "Missing credentials.",
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return new JsonResponse([
+            "username" => $user->getUserIdentifier(),
+            "roles"    => $user->getRoles(),
+        ], Response::HTTP_OK);
+    }
+
+    #[Route('/api/sign-out', methods: ["POST"], name: 'app:sign-out')]
+    public function signOut(Security $security): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse([
+                "message" => "Access denied.",
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $security->logout(false);
+
+        return new RedirectResponse(
+            $this->urlGenerator->generate("app:front"),
+            RedirectResponse::HTTP_SEE_OTHER
+        );
+    }
+
+    /**
+     * @var User $user
+     */
+    #[Route('/api/my-account', name: 'app:your:account')]
+    public function myAccount(): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse([
+                "message" => "Access denied.",
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return new JsonResponse([
+            "userName"  => $user->getUserName(),
+            "userEmail" => $user->getEmail(),
+        ], Response::HTTP_OK);
     }
 }

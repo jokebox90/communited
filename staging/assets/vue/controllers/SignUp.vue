@@ -2,20 +2,23 @@
 // assets/vue/controllers/SignUp.vue
 
 import _ from "lodash";
-import { reactive } from 'vue';
-import http from "../http";
+import { onBeforeMount, reactive } from 'vue';
+import { useRouter } from "vue-router";
+import { useUserStore } from "../helpers/stores";
+import http from "../helpers/http";
 import { success, warning } from "../helpers/toasts";
-import Title from "../components/Title.vue";
-import Description from "../components/Description.vue";
+import Hero from "../components/Hero.vue";
 
+const router = useRouter();
+const userStore = useUserStore();
 const state = reactive({
   password: "",
   showPassword: false,
   registerStatus: "Idle",
-})
+});
 
-async function registerUser(fields) {
-  const { data, status } = await http.post("/sign-up", {
+async function signUp(fields) {
+  const { data, status } = await http.post("/api/sign-up", {
     username: fields.username,
     password: fields.password,
     email: fields.email,
@@ -52,29 +55,29 @@ function generatePassword() {
   state.password = _.join(_.shuffle(chars), "");
   state.showPassword = true;
 }
+
+onBeforeMount(() => {
+  if (userStore.isAuthenticated) router.push("my-account");
+});
 </script>
 
 <template>
   <div class="flex flex-col justify-start items-center gap-12">
-    <div class="w-full max- flex flex-col items-center justify-center gap-6">
-      <div class="text-center pt-24 bg-gradient-to-t from-zinc-600 to-zinc-700 w-full border-b-2 border-rose-700">
-        <Title class="text-rose-600">
-          Inscription
-        </Title>
+    <div class="w-full flex flex-col items-center justify-center gap-6">
 
-        <Description>
-          Renseignez vos informations pour
-          créer votre compte d'utilisateur.
-        </Description>
-      </div>
+      <Hero
+        cite="Gestion des comptes"
+        title="Inscription"
+        description="Renseigner vos informations utilisateur et créez votre compte."
+      />
 
       <FormKit
         type="form"
         id="signUpForm"
-        @submit="registerUser"
+        @submit="signUp"
         :actions="false"
       >
-        <div class="w-full max-w-sm pt-6 flex flex-col gap-3">
+        <div class="w-full max-w-sm pt-6 px-3 flex flex-col gap-3">
           <FormKit
             type="text"
             name="username"

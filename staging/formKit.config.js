@@ -29,17 +29,17 @@ export default {
       // Global styles apply to _all_ inputs with matching section keys
       global: {
         fieldset: 'max-w-md border border-gray-400 rounded-lg px-2 pb-1',
-        help: 'text-xs text-gray-300',
+        help: 'text-xs text-zinc-900',
         inner: 'formkit-disabled:bg-gray-200 formkit-disabled:cursor-not-allowed formkit-disabled:pointer-events-none',
-        input: 'appearance-none bg-teal-100 text-black focus:outline-none focus:ring-0 focus:shadow-none',
+        input: 'appearance-none bg-slate-100 text-black focus:outline-none focus:ring-0 focus:shadow-none',
         label: 'block mb-1 font-bold text-sm',
         legend: 'font-bold text-sm',
         loaderIcon: 'inline-flex items-center w-4 text-gray-600 animate-spin',
-        message: 'text-yellow-400 mb-1 text-xs',
+        message: 'text-rose-600 mb-1 text-xs',
         messages: 'list-none p-0 mt-1 mb-0',
         outer: 'mb-4 formkit-disabled:opacity-50',
-        prefixIcon: 'w-12 flex self-stretch grow-0 shrink-0 rounded-tl-lg rounded-bl-lg border-r-8 border-yellow-500 bg-teal-900 text-white from-transparent to-gray-200 [&>svg]:w-full [&>svg]:max-w-[1em] [&>svg]:max-h-[1em] [&>svg]:m-auto',
-        suffixIcon: 'w-12 flex self-stretch grow-0 shrink-0 rounded-tr-lg rounded-br-lg border-l-8 border-rose-700 bg-teal-900 text-white from-gray-200 to-transparent [&>svg]:w-full [&>svg]:max-w-[1em] [&>svg]:max-h-[1em] [&>svg]:m-auto'
+        prefixIcon: 'w-12 flex self-stretch grow-0 shrink-0 rounded-tl-lg rounded-bl-lg border-r-8 border-yellow-500 bg-slate-500 text-white from-transparent to-gray-200 [&>svg]:w-full [&>svg]:max-w-[1em] [&>svg]:max-h-[1em] [&>svg]:m-auto',
+        suffixIcon: 'w-12 flex self-stretch grow-0 shrink-0 rounded-tr-lg rounded-br-lg border-l-8 border-rose-700 bg-slate-500 text-white from-gray-200 to-transparent [&>svg]:w-full [&>svg]:max-w-[1em] [&>svg]:max-h-[1em] [&>svg]:m-auto'
       },
 
       // Family styles apply to all inputs that share a common family
@@ -108,7 +108,7 @@ export default {
         decoratorIcon: 'w-5 p-[5px]'
       },
       checkbox: {
-        label: "text-white",
+        label: "text-slate-700",
         input: "$reset accent-pink-600 mx-3 w-5 h-5",
         decorator: "$reset",
       },

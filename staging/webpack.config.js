@@ -84,7 +84,7 @@ Encore
   // enables VueJS support
   .enableVueLoader(() => {}, {
     version: 3,
-    runtimeCompilerBuild: true,
+    runtimeCompilerBuild: false,
   });
 
 module.exports = Encore.getWebpackConfig();

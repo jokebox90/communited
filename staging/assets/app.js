@@ -1,8 +1,10 @@
 // assets/app.js
 
 import "./styles/app.css";
+import "animate.css";
 
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import { plugin, defaultConfig } from "@formkit/vue";
 import Vue3Toastify from "vue3-toastify";
 import config from "../formKit.config";
@@ -12,6 +14,9 @@ import vue3ToastifyConfig from "./vue/vue3-toastify";
 import feather from "feather-icons";
 
 const app = createApp(App);
+
+const pinia = createPinia();
+app.use(pinia);
 
 app.use(plugin, defaultConfig(config));
 console.log("FormKit is running ...");
