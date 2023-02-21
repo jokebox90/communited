@@ -49,6 +49,7 @@ Encore
   .enableVersioning(Encore.isProduction())
   .addAliases({
     "@": path.resolve(__dirname, 'assets', 'vue'),
+    "~": path.resolve(__dirname),
   })
 
   // configure Babel

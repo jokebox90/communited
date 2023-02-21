@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// staging/src/Command/CustomerCommand.php
+// src/Command/CustomerCommand.php
 
 namespace App\Command;
 

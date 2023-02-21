@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// staging/src/DataFixtures/OrderFixtures.php
+// src/DataFixtures/OrderFixtures.php
 
 namespace App\DataFixtures;
 

@@ -4,7 +4,7 @@
 import _ from "lodash";
 import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import Title from "../components/Title.vue";
+import Title from "@/components/Title.vue";
 
 const route = useRoute();
 

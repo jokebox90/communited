@@ -9,7 +9,7 @@ import {
 import { applicationIcons } from "@formkit/icons";
 import { generateClasses } from '@formkit/themes';
 import { fr, de } from "@formkit/i18n";
-import addAsteriskPlugin from "./assets/plugins/addAsterisk";
+import addAsteriskPlugin from "~/assets/plugins/addAsterisk";
 
 export default {
   icons: {

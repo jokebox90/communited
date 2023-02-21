@@ -1,5 +1,5 @@
 <script setup>
-// assets/vue/controllers/MyAccount.vue
+// assets/vue/controllers/admin/users/UserList.vue
 
 import { reactive, onBeforeMount } from 'vue';
 import { useRouter } from "vue-router";

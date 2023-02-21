@@ -3,10 +3,10 @@
 
 import { reactive, onBeforeMount } from 'vue';
 import { useRouter } from "vue-router";
-import { useUserStore } from "../helpers/stores";
-import http from '../helpers/http';
-import { success, warning } from "../helpers/toasts";
-import Hero from '../components/Hero.vue';
+import { useUserStore } from "@/helpers/stores";
+import http from '@/helpers/http';
+import { success, warning } from "@/helpers/toasts";
+import Hero from '@/components/Hero.vue';
 
 const router = useRouter();
 const userStore = useUserStore();

@@ -1,6 +1,6 @@
 <?php
 
-// staging/src/MessageHandler/UpdateNotifierHandler.php
+// src/MessageHandler/UpdateNotifierHandler.php
 
 namespace App\MessageHandler;
 

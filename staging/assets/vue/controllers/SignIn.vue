@@ -4,8 +4,8 @@
 import _ from "lodash";
 import { reactive } from 'vue';
 import { useRouter } from "vue-router";
-import { useUserStore } from "../helpers/stores";
-import Hero from "../components/Hero.vue";
+import { useUserStore } from "@/helpers/stores";
+import Hero from "@/components/Hero.vue";
 
 const router = useRouter();
 const userStore = useUserStore();

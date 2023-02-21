@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// staging/src/DataFixtures/MerchantFixtures.php
+// src/DataFixtures/MerchantFixtures.php
 
 namespace App\DataFixtures;
 

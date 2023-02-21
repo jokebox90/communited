@@ -2,8 +2,8 @@
 import _ from "lodash";
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import Logos from "../components/Logos.vue";
-import Title from "../components/Title.vue";
+import Logos from "@/components/Logos.vue";
+import Title from "@/components/Title.vue";
 
 const route = useRoute();
 const path = computed(() => route.path);

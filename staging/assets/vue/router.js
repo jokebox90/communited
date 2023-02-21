@@ -2,14 +2,14 @@
 
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "./helpers/stores";
-import Home from "./controllers/Home.vue";
-import Hello from "./controllers/Hello.vue";
-import About from "./controllers/About.vue";
-import SignIn from "./controllers/SignIn.vue";
-import SignOut from "./controllers/SignOut.vue";
-import SignUp from "./controllers/SignUp.vue";
-import MyAccount from "./controllers/MyAccount.vue";
-import UserList from "./controllers/admin/users/UserList.vue";
+import Home from "@/controllers/Home.vue";
+import Hello from "@/controllers/Hello.vue";
+import About from "@/controllers/About.vue";
+import SignIn from "@/controllers/SignIn.vue";
+import SignOut from "@/controllers/SignOut.vue";
+import SignUp from "@/controllers/SignUp.vue";
+import MyAccount from "@/controllers/MyAccount.vue";
+import UserList from "@/controllers/admin/users/UserList.vue";
 import _ from "lodash";
 import { warning } from "./helpers/toasts";
 
