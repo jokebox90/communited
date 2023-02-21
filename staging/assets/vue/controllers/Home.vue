@@ -1,45 +1,25 @@
+<script setup>
+import _ from "lodash";
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import Logos from "../components/Logos.vue";
+import Title from "../components/Title.vue";
+
+const route = useRoute();
+const path = computed(() => route.path);
+</script>
+
 <template>
-  <div class="d-flex flex-column align-items-center pt-5 col-sm-6 mx-auto">
+  <div class="flex flex-col items-center justify-start">
     <Logos />
 
-    <div id="greeter">
-      <Title random-color>
-        Vous êtes ici: {{ name }}!
+    <div class="flex flex-col items-center w-max">
+      <Title class="text-rose-600">
+        Vous êtes ici: {{ path }}
       </Title>
 
-      <h4>{{ message }}!</h4>
-      <p>{{ path }}!</p>
-      <p>{{ hit }}!</p>
+      <p>Editez: assets/vue/controllers/Home.vue</p>
     </div>
   </div>
 </template>
 
-<script setup>
-import _ from "lodash";
-import Navigation from "../components/Navigation.vue";
-import Logos from "../components/Logos.vue";
-import Title from "../components/Title.vue";
-
-defineProps({
-  name: String,
-  message: String,
-  path: String,
-  hit: Number,
-});
-</script>
-
-<style scoped>
-#home {
-  min-height: 100vh;
-  height: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-#greeter {
-  text-align: center;
-}
-</style>
