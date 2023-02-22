@@ -9,6 +9,8 @@ import SignIn from "@/controllers/SignIn.vue";
 import SignOut from "@/controllers/SignOut.vue";
 import SignUp from "@/controllers/SignUp.vue";
 import MyAccount from "@/controllers/MyAccount.vue";
+import CustomerList from "@/controllers/admin/ShopCustomers/CustomerList.vue";
+import CustomerRead from "@/controllers/admin/ShopCustomers/CustomerRead.vue";
 import ItemList from "@/controllers/admin/ShopItems/ItemList.vue";
 import ItemRead from "@/controllers/admin/ShopItems/ItemRead.vue";
 import UserList from "@/controllers/admin/users/UserList.vue";
@@ -59,6 +61,18 @@ const routes = [
     path: "/admin/shop/items/:itemId",
     component: ItemRead,
     name: "shop-item-read",
+    meta: { requiresAuth: true, backTo: "sign-in" },
+  },
+  {
+    path: "/admin/shop/customers",
+    component: CustomerList,
+    name: "shop-customer-list",
+    meta: { requiresAuth: true, backTo: "sign-in" },
+  },
+  {
+    path: "/admin/shop/customers/:customerId",
+    component: CustomerRead,
+    name: "shop-customer-read",
     meta: { requiresAuth: true, backTo: "sign-in" },
   },
 ];
