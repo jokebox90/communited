@@ -30,16 +30,26 @@ async function onSubmit() {
   }
 }
 
-onBeforeMount(async () => {
-  const { data, status } = await http.get("/api/my-account");
-
-  if (status === 200) {
-    state.userName = data.userName;
-    state.userEmail = data.userEmail;
-  } else if (status === 401) {
-    await warning("Vous n'êtes pas connecté.");
-    router.replace({ name: "sign-in" });
-  }
+onBeforeMount(() => {
+  http
+    .get("/api/my-account")
+    .then(({ data }) => {
+      state.userName = data.userName;
+      state.userEmail = data.userEmail;
+    })
+    .catch(async ({ response }) => {
+      if (response)  {
+        if (response.status === 401) {
+          userStore.doSignOut();
+          router.replace({ name: "sign-in" });
+          await warning("Vous n'êtes pas connecté.");
+        } else {
+          await danger("Erreur inconnue.");
+        }
+      } else {
+        await danger("Pas de réponse du serveur.");
+      }
+    });
 });
 </script>
 

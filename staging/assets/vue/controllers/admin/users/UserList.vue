@@ -36,7 +36,8 @@ onBeforeMount(async () => {
   />
 
   <div class="w-full px-3 py-8">
-    <div v-for="user in state.userList" class="flex flex-col gap-0 w-full shadow-md rounded-xl bg-zinc-100 border border-zinc-300 py-8 px-6">
+    <div v-for="user in state.userList"
+      class="flex flex-col gap-0 w-full shadow-md rounded-xl bg-zinc-100 border border-zinc-300 py-8 px-6">
       <div class="flex flex-row gap-0 w-full">
         <p class="w-1/3 pr-3 py-4 font-bold text-right border-r-4 border-rose-600">
           UniqueId

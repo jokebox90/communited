@@ -39,7 +39,6 @@ function toggle() {
   }
 }
 function navigateTo(name, options) {
-  console.log("GoTo:", name);
   state.open = false;
 
   const { params, query } = {

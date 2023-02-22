@@ -14,3 +14,7 @@ export async function success(message) {
 export async function warning(message) {
   toast.warning(message);
 }
+
+export async function danger(message) {
+  toast.error(message);
+}

@@ -10,7 +10,6 @@ class FrontController extends AbstractController
 {
     #[Route("/", name: "app:front")]
     #[Route("/site/{path<.+>}", name: "app:site")]
-    #[Route("/admin/{path<.+>}", name: "app:admin")]
     public function index(): Response
     {
         return $this->render("front.html.twig");

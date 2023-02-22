@@ -70,6 +70,13 @@ async function doSignInHandler(fields) {
           />
 
           <FormKit
+            type="checkbox"
+            name="_remember_me"
+            label="Rester connecté"
+            help="Vérifiez que vous utilisez bien un appareil personnel."
+          />
+
+          <FormKit
             type="submit"
             label="Valider"
             prefix-icon="check"

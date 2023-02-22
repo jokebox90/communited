@@ -16,20 +16,31 @@ const state = reactive({
   userEmail: "",
 })
 
-onBeforeMount(async () => {
-  const { data, status } = await http.get("/api/my-account");
-  if (status === 200) {
-    state.userName = data.userName;
-    state.userEmail = data.userEmail;
-  }
+onBeforeMount(() => {
+  http
+    .get("/api/my-account")
+    .then(({ data }) => {
+      state.userName = data.userName;
+      state.userEmail = data.userEmail;
+    })
+    .catch(async ({ response }) => {
+      if (response)  {
+        if (response.status === 401) {
+          userStore.doSignOut();
+          router.replace({ name: "sign-in" });
+          await warning("Vous n'êtes pas connecté.");
+        } else {
+          await danger("Erreur inconnue.");
+        }
+      } else {
+        await danger("Pas de réponse du serveur.");
+      }
+    });
 });
 </script>
 
 <template>
-  <Hero
-    title="Mon compte"
-    description="Retrouvez toutes les informations de votre compte utilisateur."
-  />
+  <Hero title="Mon compte" description="Retrouvez toutes les informations de votre compte utilisateur." />
 
   <div class="w-full px-3 py-8">
     <div class="flex flex-col gap-0 w-full shadow-md rounded-xl bg-zinc-100 border border-zinc-300 py-8 px-6">

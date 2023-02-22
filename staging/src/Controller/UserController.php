@@ -172,10 +172,28 @@ class UserController extends AbstractController
         );
     }
 
+    #[Route('/api/sign-check', methods: ["POST"], name: 'app:sign-check')]
+    public function signCheck(Security $security): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse([
+                "message" => "Not connected.",
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $security->logout(false);
+
+        return new JsonResponse([
+            "message" => "Connected.",
+        ], Response::HTTP_OK);
+    }
+
     /**
      * @var User $user
      */
-    #[Route('/api/my-account', name: 'app:your:account')]
+    #[Route('/api/my-account', name: 'app:my-account')]
     public function myAccount(): Response
     {
         $user = $this->getUser();
