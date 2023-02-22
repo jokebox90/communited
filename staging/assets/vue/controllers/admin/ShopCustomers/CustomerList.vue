@@ -13,7 +13,10 @@ const state = reactive({
 })
 
 onBeforeMount(async () => {
-  const { data, status } = await http.get("/api/shop/customers");
+  const { data, status } = await http.get("/api/shop/customers", {
+    withCredentials: true
+  });
+
   if (status === 200) {
     _.map(data.shopcustomers, (customer) => {
       state.customerList.push(customer);

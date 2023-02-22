@@ -14,7 +14,10 @@ const state = reactive({
 
 onBeforeMount(async () => {
   const itemId = route.params.itemId;
-  const { data, status } = await http.get(`/api/shop/items/${itemId}`);
+  const { data, status } = await http.get(`/api/shop/items/${itemId}`, {
+    withCredentials: true
+  });
+
   if (status === 200) {
     state.item = {
       itemId: data.shopItem.itemId,

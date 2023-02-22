@@ -13,7 +13,10 @@ const state = reactive({
 })
 
 onBeforeMount(async () => {
-  const { data, status } = await http.get("/api/shop/items");
+  const { data, status } = await http.get("/api/shop/items", {
+    withCredentials: true
+  });
+
   if (status === 200) {
     _.map(data.shopItems, (item) => {
       state.itemList.push({
@@ -28,7 +31,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <Hero title="Articles de la boutique" description="Retrouvez tous les article de vote boutique en ligne." />
+  <Hero title="Articles de la boutique" description="Retrouvez tous les article de votre boutique en ligne." />
 
   <div class="w-full px-3 py-8">
     <div v-for="item in state.itemList"

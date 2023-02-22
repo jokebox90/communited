@@ -18,7 +18,9 @@ const state = reactive({
 
 onBeforeMount(() => {
   http
-    .get("/api/my-account")
+    .get("/api/my-account", {
+      withCredentials: true
+    })
     .then(({ data }) => {
       state.userName = data.userName;
       state.userEmail = data.userEmail;

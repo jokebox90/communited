@@ -16,7 +16,10 @@ const state = reactive({
 })
 
 onBeforeMount(async () => {
-  const { data, status } = await http.get("/api/users");
+  const { data, status } = await http.get("/api/users", {
+    withCredentials: true
+  });
+
   if (status === 200) {
     _.map(data.users, (user) => {
       state.userList.push({
