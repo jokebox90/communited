@@ -28,7 +28,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <Hero :title="state.item.title" description="Article de vote boutique en ligne." />
+  <Hero :title="state.item.title" description="Article de votre boutique en ligne." />
 
   <div class="w-full px-3 py-8">
     <div class="flex flex-col gap-0 w-full shadow-md rounded-xl bg-zinc-100 border border-zinc-300 py-8 px-6">
