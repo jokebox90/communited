@@ -3,7 +3,7 @@
 import _ from "lodash";
 
 export function getAuth() {
-  const raw = localStorage.getItem("app:auth");
+  const raw = sessionStorage.getItem("app:auth");
   if (_.isNull(raw)) return null;
   const auth = JSON.parse(raw);
   return auth;
@@ -11,11 +11,11 @@ export function getAuth() {
 
 export function setAuth(options) {
   if (_.isNull(options)) {
-    localStorage.removeItem("app:auth");
+    sessionStorage.removeItem("app:auth");
     return;
+  } else {
+    const current = _.defaultTo(getAuth(), {});
+    const raw = JSON.stringify(_.assign(current, options));
+    sessionStorage.setItem("app:auth", raw);
   }
-
-  const current = _.defaultTo(getAuth(), {});
-  const raw = JSON.stringify(_.assign(current, options));
-  localStorage.setItem("app:auth", raw);
 }
