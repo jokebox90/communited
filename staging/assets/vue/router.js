@@ -9,6 +9,8 @@ import SignIn from "@/controllers/SignIn.vue";
 import SignOut from "@/controllers/SignOut.vue";
 import SignUp from "@/controllers/SignUp.vue";
 import MyAccount from "@/controllers/MyAccount.vue";
+import ItemList from "@/controllers/admin/ShopItems/ItemList.vue";
+import ItemRead from "@/controllers/admin/ShopItems/ItemRead.vue";
 import UserList from "@/controllers/admin/users/UserList.vue";
 import _ from "lodash";
 import { warning } from "./helpers/toasts";
@@ -45,6 +47,18 @@ const routes = [
     path: "/admin/users",
     component: UserList,
     name: "user-list",
+    meta: { requiresAuth: true, backTo: "sign-in" },
+  },
+  {
+    path: "/admin/shop/items",
+    component: ItemList,
+    name: "shop-item-list",
+    meta: { requiresAuth: true, backTo: "sign-in" },
+  },
+  {
+    path: "/admin/shop/items/:itemId",
+    component: ItemRead,
+    name: "shop-item-read",
     meta: { requiresAuth: true, backTo: "sign-in" },
   },
 ];
