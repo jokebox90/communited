@@ -1,6 +1,7 @@
 <script setup>
 import _ from "lodash";
 import { defineProps } from "vue";
+import VFeather from "@/components/VFeather.vue";
 
 const Props = defineProps({
   cite: String,
@@ -16,7 +17,7 @@ const Props = defineProps({
       v-if="icon"
       class="w-96 h-96 p-24 pt-6 bg-zinc-200 rounded-full text-zinc-100"
     >
-      <i class="w-full h-full" :data-feather="icon"></i>
+      <v-feather class="w-full h-full" :icon="icon"></v-feather>
     </div>
     <div class="w-full text-center px-4 -mt-48">
       <p
