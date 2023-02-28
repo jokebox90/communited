@@ -7,6 +7,10 @@ import { reactive, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import http from "@/helpers/http";
 import Hero from "@/components/Hero.vue";
+import VBtnLink from "@/components/links/VBtnLink.vue";
+import VCard from "@/components/card/VCard.vue";
+import VCardContent from "@/components/card/VCardContent.vue";
+import VCardTitle from "@/components/card/VCardTitle.vue";
 
 const router = useRouter();
 const state = reactive({
@@ -31,69 +35,30 @@ onBeforeMount(async () => {
   />
 
   <div class="flex flex-row flex-wrap gap-4 justify-center w-full px-4 py-8">
-    <div
-      v-for="order in state.orders"
-      class="flex flex-col gap-0 md:w-96 sm:w-full shadow-md rounded-xl bg-zinc-100 border border-zinc-300 py-8 px-6 mb-4"
-    >
-      <div class="flex flex-row gap-0 w-full">
-        <p
-          class="w-1/3 pr-3 py-4 font-bold text-right border-r-4 border-rose-600"
-        >
-          Référence
-        </p>
+    <v-card v-for="order in state.orders" color="yellow">
+      <v-card-title class="border-zinc-200 text-zinc-200">
+        {{ order.reference }} ({{ order.status }})
+      </v-card-title>
 
-        <p class="w-2/3 pl-3 py-4">
-          {{ order.reference }}
-        </p>
-      </div>
+      <v-card-content color="text-zinc-200">
+        {{ order.emailAddress }}
+      </v-card-content>
 
-      <div class="flex flex-row gap-0 w-full">
-        <p
-          class="w-1/3 pr-3 py-4 font-bold text-right border-r-4 border-rose-600"
-        >
-          Email
-        </p>
-        <p class="w-2/3 pl-3 py-4">
-          {{ order.emailAddress }}
-        </p>
-      </div>
+      <v-card-content class="text-sm font-semibold" color="text-zinc-200">
+        Créée-le: {{ moment(order.createdAt).format("LLLL") }}
+      </v-card-content>
 
-      <div class="flex flex-row gap-0 w-full">
-        <p
-          class="w-1/3 pr-3 py-4 font-bold text-right border-r-4 border-rose-600"
-        >
-          Statut
-        </p>
-        <p class="w-2/3 pl-3 py-4">
-          {{ order.status }}
-        </p>
-      </div>
-
-      <div class="flex flex-row gap-0 w-full">
-        <p
-          class="w-1/3 pr-3 py-4 font-bold text-right border-r-4 border-rose-600"
-        >
-          Créée-le
-        </p>
-        <p class="w-2/3 pl-3 py-4">
-          {{ moment(order.createdAt).format("LLLL") }}
-        </p>
-      </div>
-
-      <FormKit
-        type="button"
-        @click="
-          () =>
-            router.push({
-              name: 'shop-order-read',
-              params: { orderId: order.orderId },
-            })
-        "
-        label="Afficher les articles"
-        prefix-icon="eye"
-        :actions="false"
-        wrapper-class="w-full justify-center mt-8"
-      />
-    </div>
+      <v-card-content>
+        <v-btn-link
+          :to="{
+            name: 'shop-order-read',
+            params: { orderId: order.orderId },
+          }"
+          title="Afficher"
+          icon="eye"
+          color="red"
+        />
+      </v-card-content>
+    </v-card>
   </div>
 </template>
