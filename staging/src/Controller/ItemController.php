@@ -17,6 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * @method   User|null             getUser
  */
 #[IsGranted('ROLE_ADMIN')]
+#[Route(null, priority: 999)]
 class ItemController extends AbstractController
 {
     #[Route('/api/shop/items', name: 'app:shop:items')]
@@ -24,16 +25,11 @@ class ItemController extends AbstractController
     {
         $results = new ArrayCollection($repository->findAll());
         $jsonData = $results->map(function(Item $item) {
-            return [
-                "itemId"    => $item->getUniqueId(),
-                "title"     => $item->getTitle(),
-                "available" => $item->getAvailable(),
-                "tags"      => $item->getTags(),
-            ];
+            return $item->populateArray();
         });
 
         return new JsonResponse([
-            "shopItems" => $jsonData->toArray(),
+            "items" => $jsonData->toArray(),
         ], Response::HTTP_OK);
     }
 
@@ -52,7 +48,7 @@ class ItemController extends AbstractController
         ];
 
         return new JsonResponse([
-            "shopItem" => $jsonData,
+            "item" => $jsonData,
         ], Response::HTTP_OK);
     }
 }

@@ -19,7 +19,7 @@ class Customer
     const GRADE_VISITOR    = "visiteur";
     const GRADE_MEMBER     = "membre";
     const GRADE_AMBASSADOR = "ambassadeur";
-    const GRADE_LEGEND    = "fondateur";
+    const GRADE_LEGEND     = "légende";
     const AVAILABLE_GRADES = [
         self::GRADE_CONTACT,
         self::GRADE_VISITOR,

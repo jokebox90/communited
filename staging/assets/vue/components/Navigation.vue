@@ -2,178 +2,191 @@
 // assets/vue/components/Navigation.vue
 
 import _ from "lodash";
-import {
-  computed,
-  onBeforeMount,
-  onBeforeUnmount,
-  reactive,
-} from 'vue';
-import { useRouter, useRoute } from "vue-router";
+import { reactive } from "vue";
+import { useBrowserStore, useUserStore } from "@/helpers/stores";
+import VNavLink from "@/components/links/VNavLink.vue";
+import VMenuLink from "./links/VMenuLink.vue";
 
-const router = useRouter();
-const route = useRoute();
+const { browserState } = useBrowserStore();
+const { userState } = useUserStore();
+const { isAuthenticated, isAdmin } = userState;
 
 const state = reactive({
-  width: window.innerHeight,
-  height: window.innerWidth,
-  isMobile: window.innerWidth < 420,
   open: false,
   transition: "animate__animated animate__fadeInDown",
   transitionWrapper: "max-h-min",
 });
 
-function resizeHadndler() {
-  state.height = window.innerHeight;
-  state.width = window.innerWidth;
-  state.isMobile = window.innerWidth < 420;
-
-}
-
 function toggle() {
-  if (state.open) {
-    state.transition = "animate__animated animate__fadeOutUp";
-    setTimeout(() => state.open = !state.open, 600);
+  if (!state.open) {
+    state.transition = "animate__animated animate__fadeInRight animate__faster";
+    setTimeout(() => (state.open = !state.open), 150);
   } else {
-    state.transition = "animate__animated animate__fadeInDown animate__faster";
-    state.open = !state.open;
+    state.transition =
+      "animate__animated animate__fadeOutRight animate__faster";
+    setTimeout(() => (state.open = !state.open), 150);
   }
 }
-function navigateTo(name, options) {
-  state.open = false;
-
-  const { params, query } = {
-    params: _.get(options, "params", {}),
-    query: _.get(options, "query", {}),
-  }
-
-  router.push({
-    name,
-    params: {
-      ...params,
-    },
-    query: {
-      ...route.query,
-      ...query,
-    },
-  });
-}
-
-onBeforeMount(() => {
-  window.addEventListener("resize", resizeHadndler);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", resizeHadndler);
-});
-
-const defaultClass = "w-full flex flex-col items-end py-3 pr-3 bg-slate-900 px-3 pb-3 absolute";
 </script>
 
 <template>
-  <nav class="w-full flex flex-lg-row flex-col justify-start relative">
-    <div class="z-50 bg-transparent py-6 text-yellow-400 w-full inline-flex justify-between bg-gradient-to-b from-slate-600 to-slate-900">
-      <span class="text-2xl font-bold border-r-4 border-yellow-400 mr-3 px-3">
+  <nav
+    class="flex flex-col items-start justify-between md:flex md:flex-row md:items-stretch w-screen bg-zinc-50"
+  >
+    <div
+      class="z-50 relative bg-transparent py-6 w-full inline-flex justify-between"
+    >
+      <span
+        class="mr-3 px-3 border-r border-yellow-500 text-2xl text-yellow-500"
+      >
         Tableau de bord
       </span>
 
-      <button v-show="state.isMobile" type="button" v-on:click="toggle" class="p-2 mr-3 bg-rose-600 rounded-full">
-        <span v-show="!state.open" class="text-2xl">
-          <i data-feather="more-vertical"></i>
-        </span>
-
-        <span v-show="state.open" class="text-2xl">
-          <i data-feather="more-horizontal"></i>
-        </span>
+      <button
+        type="button"
+        v-on:click="toggle"
+        class="lg:hidden p-2 mr-4 w-10 h-10 bg-zinc-200 text-rose-600 rounded-full transition-all delay-200 duration-300"
+        :class="state.open && `-rotate-90`"
+      >
+        <i class="w-full h-full" data-feather="more-vertical"></i>
       </button>
     </div>
 
-    <div v-show="state.isMobile && state.open" class="z-40 static">
-      <div :class="[defaultClass, state.transition]">
-        <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s relative">
-          <div
-            class="bg-yellow-400 hover:bg-yellow-300 rounded-full w-full mb-3">
-            <button v-on:click="() =>navigateTo('home')" type="button" class="m-0 px-4 py-2 text-black flex justify-end gap-3">
-              Home
-              <i data-feather="home"></i>
-            </button>
-          </div>
-        </div>
+    <div :class="state.open ? null : `hidden`" class="static overflow-hidden">
+      <div
+        class="z-40 md:w-1/2 w-screen overflow-hidden flex flex-col items-end py-3 pr-3 bg-zinc-200 text-zinc-900 px-3 pb-3 absolute right-0 top-20"
+        :class="state.transition"
+      >
+        <v-menu-link
+          :to="{ name: 'home' }"
+          icon="home"
+          iconBg="bg-yellow-500"
+          @click.native="() => (state.open = false)"
+        >
+          Home
+        </v-menu-link>
 
-        <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
-          <div
-            class="bg-zinc-100 rounded-full w-full mb-3">
-            <button v-on:click="() =>navigateTo('about')" class="m-0 px-4 py-2 text-black flex justify-end gap-3">
-              About
-              <i data-feather="info"></i>
-            </button>
-          </div>
+        <v-menu-link
+          :to="{ name: 'about' }"
+          icon="info"
+          @click.native="() => (state.open = false)"
+        >
+          About
+        </v-menu-link>
 
-          <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
-            <div
-              class="bg-zinc-100 rounded-full w-full mb-3">
-              <button
-                v-on:click="() =>navigateTo('hello', { params: {firstName: 'Else', lastName: 'World'} })"
-                class="m-0 px-4 py-2 text-black flex justify-end gap-3"
-              >
-                Elseworld
-                <i data-feather="globe"></i>
-              </button>
-            </div>
-          </div>
+        <v-menu-link
+          :to="{
+            name: 'hello',
+            params: { firstName: 'Else', lastName: 'World' },
+          }"
+          icon="info"
+          @click.native="() => (state.open = false)"
+        >
+          Elseworld
+        </v-menu-link>
 
-          <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
-            <div
-              class="bg-zinc-100 rounded-full w-full mb-3">
-              <button
-                v-on:click="() =>navigateTo('user-list')"
-                class="m-0 px-4 py-2 text-black flex justify-end gap-3"
-              >
-                Utilisateurs
-                <i data-feather="globe"></i>
-              </button>
-            </div>
-          </div>
+        <v-menu-link
+          :to="{ name: 'user-list' }"
+          icon="info"
+          @click.native="() => (state.open = false)"
+          v-if="!isAdmin"
+        >
+          Utilisateurs
+        </v-menu-link>
 
-          <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
-            <div
-              class="bg-zinc-100 rounded-full w-full mb-3">
-              <button v-on:click="() =>navigateTo('my-account')" class="m-0 px-4 py-2 text-black flex justify-end gap-3">
-                Compte
-                <i data-feather="globe"></i>
-              </button>
-            </div>
-          </div>
+        <v-menu-link
+          :to="{ name: 'shop' }"
+          icon="shopping-bag"
+          @click.native="() => (state.open = false)"
+          v-if="isAdmin"
+        >
+          Boutique
+        </v-menu-link>
 
-          <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
-            <div
-              class="bg-zinc-100 rounded-full w-full mb-3">
-              <button v-on:click="() =>navigateTo('sign-in')" class="m-0 px-4 py-2 text-black flex justify-end gap-3">
-                Se connecter
-                <i data-feather="user-check"></i>
-              </button>
-            </div>
-          </div>
+        <v-menu-link
+          :to="{ name: 'my-account' }"
+          icon="user"
+          @click.native="() => (state.open = false)"
+          v-if="isAuthenticated"
+        >
+          Compte
+        </v-menu-link>
 
-          <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
-            <div
-              class="bg-zinc-100 rounded-full w-full mb-3">
-              <button v-on:click="() =>navigateTo('sign-out')" class="m-0 px-4 py-2 text-black flex justify-end gap-3">
-                Se déconnecter
-                <i data-feather="user-check"></i>
-              </button>
-            </div>
-          </div>
+        <v-menu-link
+          :to="{ name: 'sign-up' }"
+          icon="user-check"
+          @click.native="() => (state.open = false)"
+          v-if="!isAuthenticated"
+        >
+          S'inscrire
+        </v-menu-link>
 
-          <div class="animate__animated animate__fadeInRight animate__faster animate__delay-2s w-full">
-            <div
-              class="bg-zinc-100 rounded-full w-full mb-3">
-              <button v-on:click="() =>navigateTo('sign-up')" class="m-0 px-4 py-2 text-black flex justify-end gap-3">
-                S'inscrire
-                <i data-feather="user-check"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+        <v-menu-link
+          :to="{ name: 'sign-in' }"
+          icon="log-in"
+          @click.native="() => (state.open = false)"
+          v-if="!isAuthenticated"
+        >
+          Se connecter
+        </v-menu-link>
+
+        <v-menu-link
+          :to="{ name: 'sign-out' }"
+          icon="log-out"
+          iconBg="bg-rose-600"
+          iconColor="text-white"
+          @click.native="() => (state.open = false)"
+          v-if="isAuthenticated"
+        >
+          Se déconnecter
+        </v-menu-link>
       </div>
     </div>
-</nav></template>
+
+    <div class="hidden lg:inline-flex gap-2 items-center pr-4">
+      <v-nav-link :to="{ name: 'home' }" icon="home" title="&nbsp;" />
+
+      <v-nav-link
+        title="Boutique"
+        :to="{ name: 'shop' }"
+        icon="shopping-cart"
+        v-if="isAuthenticated && isAdmin"
+      />
+
+      <v-nav-link
+        title="Utilisateurs"
+        :to="{ name: 'user-list' }"
+        icon="users"
+        v-if="isAuthenticated && isAdmin"
+      />
+
+      <v-nav-link
+        title="S'inscrire"
+        :to="{ name: 'sign-up' }"
+        icon="user-check"
+        v-if="!isAuthenticated"
+      />
+
+      <v-nav-link
+        title="Mon compte"
+        :to="{ name: 'my-account' }"
+        icon="user"
+        v-if="isAuthenticated"
+      />
+
+      <v-nav-link
+        title="Se connecter"
+        :to="{ name: 'sign-in' }"
+        icon="log-in"
+        v-if="!isAuthenticated"
+      />
+
+      <v-nav-link
+        title="Se déconnecter"
+        :to="{ name: 'sign-out' }"
+        icon="log-out"
+        v-if="isAuthenticated"
+      />
+    </div>
+  </nav>
+</template>

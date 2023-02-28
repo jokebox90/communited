@@ -10,6 +10,7 @@ use App\Entity\Customer;
 use App\Entity\Address;
 use App\Entity\CustomerPrice;
 use App\Repository\CustomerRepository;
+use App\Service\UniqueIdGenerator;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,23 +26,25 @@ final class CustomerFixtures extends Fixture
     private EntityManagerInterface|null $em = null;
     private CustomerRepository|null $customerRepository = null;
     private Faker\Generator|null $faker = null;
+    private UniqueIdGenerator|null $uuid = null;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, UniqueIdGenerator $uuid)
     {
         $this->em = $doctrine->getManager();
         $this->customerRepository = $doctrine->getRepository(Customer::class);
         $this->faker = Faker\Factory::create('fr_FR');
+        $this->uuid = $uuid;
     }
 
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < self::COUNTER; $i++) {
-            $customerId = (Uuid::uuid4())->toString();
+            $customerId = $this->uuid->create();
 
-            $Address = [];
+            $address = [];
             for ($j = 0; $j < self::POSTAL_ADDRESS_COUNTER; $j++) {
                 $address[] = [
-                    "uniqueId"        => (Uuid::uuid4())->toString(),
+                    "uniqueId"        => $this->uuid->create(),
                     "customerId"      => $customerId,
                     "street"          => $this->faker->streetAddress(),
                     "postalCode"      => $this->faker->postcode(),
@@ -64,7 +67,7 @@ final class CustomerFixtures extends Fixture
             }
 
             $customerArray = [
-                "uniqueId"     => $customerId,
+                // "uniqueId"     => $customerId,
                 "firstName"    => $this->faker->firstName(),
                 "lastName"     => $this->faker->lastName(),
                 "grade"        => $this->faker->randomElement(Customer::AVAILABLE_GRADES),

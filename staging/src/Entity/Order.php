@@ -243,7 +243,6 @@ class Order
         $this->setReference($array["reference"]);
         $this->setEmailAddress($array["emailAddress"]);
         $this->setAdditionalNotes($array["additionalNotes"]);
-        $this->setCreatedAt(DateTime::createFromFormat(DateTime::ATOM, $array["createdAt"]));
         $this->setStatus($array["status"]);
 
         return $this;

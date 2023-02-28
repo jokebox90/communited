@@ -232,6 +232,8 @@ class Item
         $array["description"] = $this->getDescription();
         $array["available"]   = $this->getAvailable();
         $array["tags"]        = $this->getTags();
+        $array["createdAt"]   = $this->getCreatedAt()->format(DateTime::ATOM);
+        $array["modifiedAt"]  = $this->getModifiedAt()->format(DateTime::ATOM);
         $array["status"]      = $this->getStatus();
         $array["prices"]      = $this->getPrices()
             ->map(function (Price $price) {

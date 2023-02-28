@@ -1,24 +1,59 @@
 <script setup>
 import _ from "lodash";
-import { defineProps } from 'vue';
+import { defineProps } from "vue";
 
 const Props = defineProps({
   cite: String,
   title: String,
   description: String,
+  icon: String,
 });
 </script>
 
 <template>
-  <div class="text-center pt-24 bg-rose-600 bg-gradient-to-b from-rose-700 via-rose-500 to-transparent w-full border-b-2 border-zinc-700">
-    <p v-if="cite" class="text-xl text-zinc-300 italic font-serif mb-3">
-      {{ cite }}
-    </p>
-    <p v-if="title" class="text-3xl text-yellow-300 mb-6">
-      {{ title }}
-    </p>
-    <p v-if="description" class="text-lg text-white mb-6">
-      {{ description }}
-    </p>
+  <div class="md:hidden w-full flex flex-col items-center justify-center">
+    <div
+      v-if="icon"
+      class="w-96 h-96 p-24 pt-6 bg-zinc-200 rounded-full text-zinc-100"
+    >
+      <i class="w-full h-full" :data-feather="icon"></i>
+    </div>
+    <div class="w-full text-center px-4 -mt-48">
+      <p
+        v-if="cite"
+        class="md:text-xl text-lg text-zinc-600 italic font-serif mb-3"
+      >
+        {{ cite }}
+      </p>
+      <p v-if="title" class="md:text-6xl text-5xl text-rose-500 mb-6">
+        {{ title }}
+      </p>
+      <p v-if="description" class="md:text-3xl text-xl text-zinc-900 mb-6">
+        {{ description }}
+      </p>
+    </div>
+  </div>
+
+  <div class="hidden relative md:flex w-full px-12 mx-auto md:-mb-16">
+    <div
+      v-if="icon"
+      class="absolute block -z-10 right-0 mr-8 lg:w-2/5 md:w-2/3 h-auto p-16 bg-zinc-200 rounded-full text-zinc-50"
+    >
+      <i class="w-full h-full" :data-feather="icon"></i>
+    </div>
+    <div class="text-center md:text-start pt-32 md:mb-32">
+      <p
+        v-if="cite"
+        class="md:text-xl text-lg text-zinc-600 italic font-serif mb-3"
+      >
+        {{ cite }}
+      </p>
+      <p v-if="title" class="text-6xl text-rose-500 mb-6">
+        {{ title }}
+      </p>
+      <p v-if="description" class="md:text-3xl text-xl text-zinc-900 mb-6">
+        {{ description }}
+      </p>
+    </div>
   </div>
 </template>

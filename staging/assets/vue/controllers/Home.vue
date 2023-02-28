@@ -1,12 +1,17 @@
 <script setup>
 import _ from "lodash";
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Logos from "@/components/Logos.vue";
 import Title from "@/components/Title.vue";
+import { success } from "@/helpers/toasts";
 
 const route = useRoute();
 const path = computed(() => route.path);
+
+onMounted(() => {
+  if (route.query.logout) success("Vous êtes bien déconnecté !");
+});
 </script>
 
 <template>

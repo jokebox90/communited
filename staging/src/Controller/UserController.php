@@ -12,7 +12,6 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -28,6 +27,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
  * @property UrlGeneratorInterface $urlGenerator
  * @method   User|null             getUser
  */
+#[Route(null, priority: 999)]
 class UserController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
@@ -153,40 +153,28 @@ class UserController extends AbstractController
         ], Response::HTTP_OK);
     }
 
-    #[Route('/api/sign-out', methods: ["POST"], name: 'app:sign-out')]
-    public function signOut(Security $security): Response
+    #[IsGranted('IS_AUTHENTICATED')]
+    #[Route('/api/sign-out', methods: ["GET"], name: 'app:sign-out')]
+    public function signOut(Security $security, UrlGeneratorInterface $urlGenerator): Response
     {
-        $user = $this->getUser();
-
-        if (!$user) {
-            return new JsonResponse([
-                "message" => "Access denied.",
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
         $security->logout(false);
-
-        return new RedirectResponse(
-            $this->urlGenerator->generate("app:front"),
-            RedirectResponse::HTTP_SEE_OTHER
-        );
+        return new JsonResponse([
+            "message" => "Succesfully sign-out.",
+            "nextUrl" => $urlGenerator->generate("app:front"),
+        ], Response::HTTP_OK);
     }
 
-    #[Route('/api/sign-check', methods: ["POST"], name: 'app:sign-check')]
-    public function signCheck(Security $security): Response
+    #[IsGranted('IS_AUTHENTICATED_REMEMBERED')]
+    #[Route('/api/sign-check', methods: ["GET"], name: 'app:sign-check')]
+    public function signCheck(): Response
     {
         $user = $this->getUser();
-
-        if (!$user) {
-            return new JsonResponse([
-                "message" => "Not connected.",
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-        $security->logout(false);
-
         return new JsonResponse([
             "message" => "Connected.",
+            "user" => [
+                "username"  => $user->getUserName(),
+                "roles" => $user->getRoles(),
+            ],
         ], Response::HTTP_OK);
     }
 

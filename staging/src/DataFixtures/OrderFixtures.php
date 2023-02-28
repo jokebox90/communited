@@ -52,7 +52,7 @@ final class OrderFixtures extends Fixture implements DependentFixtureInterface
 
             $customer   = $customers[random_int(0, count($customers) - 1)];
             $AddressCollection = $customer->getAddress();
-            $Address = $AddressCollection[random_int(0, count($AddressCollection) - 1)];
+            $address = $AddressCollection[random_int(0, count($AddressCollection) - 1)];
 
             $orderArray = [
                 "uniqueId"        => $orderId,
@@ -70,7 +70,7 @@ final class OrderFixtures extends Fixture implements DependentFixtureInterface
             $newOrder = new Order();
             $newOrder->exchangeArray($orderArray);
             $newOrder->setCustomer($customer);
-            $newOrder->setAddress($Address);
+            $newOrder->setAddress($address);
 
             for ($j = 0; $j < 3; $j++) {
                 $item = $items[random_int(0, count($items) - 1)];
@@ -80,8 +80,10 @@ final class OrderFixtures extends Fixture implements DependentFixtureInterface
                 $item->setUniqueId((Uuid::uuid4())->toString());
                 $item->setAdditionalNotes($this->faker->sentence(12));
                 $item->setPrice($prices[random_int(0, count($prices) - 1)]);
+                $item->setCreatedAt($date);
+                $item->setModifiedAt($date);
 
-                $newOrder->addSold($item);
+                $newOrder->addItemToSold($item);
             }
 
             $this->orderRepository->save($newOrder);

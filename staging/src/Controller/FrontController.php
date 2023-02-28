@@ -5,20 +5,24 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class FrontController extends AbstractController
 {
-    #[Route("/", name: "app:front")]
-    #[Route("/site/{path<.+>}", name: "app:site")]
+    #[Route("/", methods: ["GET"], name: "app:front")]
+    #[Route("/{path<.+>}", methods: ["GET"], name: "app:site")]
     public function index(): Response
     {
         return $this->render("front.html.twig");
     }
 
-    #[IsGranted('IS_AUTHENTICATED')]
-    #[Route("/admin/{path<.+>}", name: "app:admin")]
+    #[Route("/admin/{path<.+>}", methods: ["GET"], name: "app:admin", priority: 99)]
     public function secured(): Response
     {
+        if (!$this->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
+            return $this->redirect("/sign-in");
+        }
+
         return $this->render("front.html.twig");
     }
 }

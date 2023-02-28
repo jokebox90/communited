@@ -2,9 +2,10 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>VueJS / Symfony app </title>
+		<title>VueJS / Symfony app
+		</title>
 
 		<link
 		rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
@@ -17,7 +18,7 @@
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
-	<body>
-		<div id="root" class="w-full h-full"></div>
+	<body class="relative min-h-screen w-screen overflow-x-hidden overflow-y-scroll flex flex-col bg-gradient-to-b from-zinc-50 to-zinc-200 text-zinc-900">
+		<div id="root"></div>
 	</body>
 </html>
