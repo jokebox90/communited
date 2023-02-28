@@ -21,6 +21,7 @@ import ItemList from "@/controllers/admin/shop/ItemList.vue";
 import ItemRead from "@/controllers/admin/shop/ItemRead.vue";
 import CustomerList from "@/controllers/admin/shop/CustomerList.vue";
 import CustomerRead from "@/controllers/admin/shop/CustomerRead.vue";
+import CustomerAddDetails from "@/controllers/customer/AddDetails.vue";
 import OrderList from "@/controllers/admin/shop/OrderList.vue";
 import OrderRead from "@/controllers/admin/shop/OrderRead.vue";
 import { featherReplace } from "@/helpers/feather";
@@ -54,7 +55,7 @@ const routes = [
         path: "sign-out",
         component: SignOut,
         name: "sign-out",
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, backTo: "home" },
       },
       {
         path: "sign-up",
@@ -65,9 +66,15 @@ const routes = [
         path: "my-account",
         component: MyAccount,
         name: "my-account",
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, backTo: "home" },
       },
     ],
+  },
+  {
+    path: "/details/add",
+    component: CustomerAddDetails,
+    name: "customer-add-details",
+    meta: { requiresAuth: true, backTo: "sign-in" },
   },
   {
     path: "/admin",
