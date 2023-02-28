@@ -1,6 +1,17 @@
 <script setup>
 // assets/vue/components/VBtnLink.vue
 
+import { onUpdated, onMounted } from "vue";
+import { featherReplace } from "@/helpers/feather";
+
+onMounted(async () => {
+  featherReplace();
+});
+
+onUpdated(async () => {
+  featherReplace();
+});
+
 const Props = defineProps({
   to: Array | Object,
   title: String,

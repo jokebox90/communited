@@ -1,5 +1,14 @@
 <script setup>
-import VDivider from "@/components/links/VDivider.vue";
+import { onUpdated, onMounted } from "vue";
+import { featherReplace } from "@/helpers/feather";
+
+onMounted(async () => {
+  featherReplace();
+});
+
+onUpdated(async () => {
+  featherReplace();
+});
 
 defineProps({
   to: Array | Object,

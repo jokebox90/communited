@@ -7,7 +7,6 @@ import { useRouter } from "vue-router";
 import http from "@/helpers/http";
 import Hero from "@/components/Hero.vue";
 import VBtnLink from "@/components/links/VBtnLink.vue";
-import { featherReplace } from "@/helpers/feather";
 import VCard from "@/components/card/VCard.vue";
 import VCardContent from "@/components/card/VCardContent.vue";
 import VCardTitle from "@/components/card/VCardTitle.vue";
@@ -25,10 +24,6 @@ onBeforeMount(async () => {
   if (status === 200) {
     state.items = _.concat(data.items);
   }
-});
-
-onUpdated(async () => {
-  featherReplace();
 });
 </script>
 
