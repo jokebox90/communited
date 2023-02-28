@@ -2,7 +2,7 @@
 // assets/vue/controllers/SignUp.vue
 
 import _ from "lodash";
-import { onBeforeMount, reactive } from 'vue';
+import { onBeforeMount, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/helpers/stores";
 import http from "@/helpers/http";
@@ -10,7 +10,8 @@ import { success, warning } from "@/helpers/toasts";
 import Hero from "@/components/Hero.vue";
 
 const router = useRouter();
-const userStore = useUserStore();
+const { userState } = useUserStore();
+const { isAuthenticated } = userState;
 const state = reactive({
   password: "",
   showPassword: false,
@@ -57,26 +58,20 @@ function generatePassword() {
 }
 
 onBeforeMount(() => {
-  if (userStore.isAuthenticated) router.push("my-account");
+  if (isAuthenticated) router.push("my-account");
 });
 </script>
 
 <template>
   <div class="flex flex-col justify-start items-center gap-12">
     <div class="w-full flex flex-col items-center justify-center gap-6">
-
       <Hero
         cite="Gestion des comptes"
         title="Inscription"
         description="Renseigner vos informations utilisateur et créez votre compte."
       />
 
-      <FormKit
-        type="form"
-        id="signUpForm"
-        @submit="signUp"
-        :actions="false"
-      >
+      <FormKit type="form" id="signUpForm" @submit="signUp" :actions="false">
         <div class="w-full max-w-sm pt-6 px-3 flex flex-col gap-3">
           <FormKit
             type="text"
@@ -108,8 +103,8 @@ onBeforeMount(() => {
 
           <FormKit
             name="password"
-            :type='state.showPassword ? "text" : "password"'
-            :prefix-icon='state.showPassword ? "eyeClosed" : "password"'
+            :type="state.showPassword ? 'text' : 'password'"
+            :prefix-icon="state.showPassword ? 'eyeClosed' : 'password'"
             @prefix-icon-click="showPassword"
             @suffix-icon-click="generatePassword"
             v-model="state.password"
@@ -131,7 +126,9 @@ onBeforeMount(() => {
             help="En cochant cette case, je reconnais avoir lu et j'accepte les conditions d'utilisation du service."
             validation="accepted"
             validation-visibility="live"
-            :validation-messages="{ accepted: `Votre approbation est nécessaire pour continuer.`, }"
+            :validation-messages="{
+              accepted: `Votre approbation est nécessaire pour continuer.`,
+            }"
           />
 
           <FormKit

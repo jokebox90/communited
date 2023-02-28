@@ -1,7 +1,7 @@
 // assets/app.js
 
-import "~/assets/styles/app.css";
-import "animate.css";
+// import "~/assets/styles/app.css";
+// import "animate.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
@@ -11,7 +11,6 @@ import config from "~/formKit.config";
 import App from "@/App.vue";
 import router from "@/router";
 import vue3ToastifyConfig from "@/vue3-toastify";
-import feather from "feather-icons";
 
 const app = createApp(App);
 
@@ -28,4 +27,3 @@ app.use(router);
 console.log("VueRouter is running ...");
 
 app.mount("#root");
-feather.replace();
