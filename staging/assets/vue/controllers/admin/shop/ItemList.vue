@@ -40,14 +40,16 @@ onUpdated(async () => {
   />
 
   <div class="flex flex-wrap flex-row gap-4 justify-center w-full pb-8 px-4">
-    <v-card v-for="item in state.items">
-      <v-card-title> {{ item.title }} ({{ item.available }}) </v-card-title>
+    <v-card v-for="item in state.items" color="yellow">
+      <v-card-title class="border-zinc-200 text-zinc-200">
+        {{ item.title }} ({{ item.available }})
+      </v-card-title>
 
-      <v-card-content>
+      <v-card-content color="text-zinc-200">
         {{ item.description }}
       </v-card-content>
 
-      <v-card-content class="text-sm font-semibold">
+      <v-card-content class="text-sm font-semibold" color="text-zinc-200">
         #{{ _.join(item.tags, " #") }}
       </v-card-content>
 
@@ -59,7 +61,7 @@ onUpdated(async () => {
           }"
           title="Afficher"
           icon="eye"
-          color="slate"
+          color="red"
         />
       </v-card-content>
     </v-card>
