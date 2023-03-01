@@ -60,13 +60,13 @@ class Contact
     #[ORM\Column(length: 14)]
     private ?string $siret = null;
 
-    #[ORM\Column(length: 12)]
+    #[ORM\Column(length: 20)]
     private ?string $vat = null;
 
     #[ORM\Column(length: 60)]
     private ?string $role = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT,nullable: true)]
     private ?string $additionalNotes = null;
 
     #[ORM\ManyToOne(inversedBy: 'contacts')]
