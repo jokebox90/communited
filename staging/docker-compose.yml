@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+
+  webapp:
+    build: .
+    restart: always
+    environment:
+      - APP_DEBUG=1
+      - DATABASE_URL=mysql://symfony:symfony@db:3306/symfony?charset=utf8mb4
+      - MAILER_DSN=smtp://mailer:1025
+      - XDEBUG_MODE=debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003
+    volumes:
+      - './src:/webapp/src'
+      - './tests:/webapp/tests'
+      - './var:/webapp/var'
+      - './config:/webapp/config'
+      - './assets:/webapp/assets'
+      - './migrations:/webapp/migrations'
+      - './public:/webapp/public'
+      - './templates:/webapp/templates'
+      # Config
+      - './.env:/webapp/.env'
+      - './php.ini:/webapp/php.ini'
+      - './jsconfig.json:/webapp/jsconfig.json'
+      - './formKit.config.js:/webapp/formKit.config.js'
+      - './postcss.config.js:/webapp/postcss.config.js'
+      - './tailwind.config.js:/webapp/tailwind.config.js'
+      - './webpack.config.js:/webapp/webpack.config.js'
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+
+  adminer:
+    build: ./adminer
+    restart: always
+    ports:
+      - '8080:8080'
+
+  mailer:
+    image: schickling/mailcatcher
+    ports:
+      - '1025:1025'
+      - '1080:1080'
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: r00t!
+      MARIADB_DATABASE: symfony
+      MARIADB_USER: symfony
+      MARIADB_PASSWORD: symfony
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+volumes:
+  db:
