@@ -1,6 +1,6 @@
 FROM php:8.2
 
-# ENV SYMFONY_INSTALL_VERSION "6.2.*"
+ENV DOCKERIZE_VERSION v0.6.1
 
 COPY ./docker/install.sh /usr/libexec/docker/install
 RUN chmod +x /usr/libexec/docker/install
