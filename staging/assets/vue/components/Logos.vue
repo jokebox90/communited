@@ -12,7 +12,7 @@ import tailwindcssPNG from "@/images/tailwindcss.png";
   />
 
   <div
-    class="flex md:flex-row max-sm:flex-col justify-around items-center w-screen p-12"
+    class="flex md:flex-row max-sm:flex-col justify-between items-center w-full mb-8"
   >
     <div
       class="w-80 h-80 px-8 bg-gradient-to-br from-white to-zinc-400 border border-white rounded-3xl flex items-center"

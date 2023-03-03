@@ -12,14 +12,14 @@ const Props = defineProps({
 </script>
 
 <template>
-  <div class="md:hidden w-full flex flex-col items-center justify-center">
+  <div class="md:hidden w-full flex flex-col items-end justify-end">
     <div
       v-if="icon"
-      class="w-96 h-96 p-24 pt-6 bg-zinc-200 rounded-full text-zinc-100"
+      class="w-48 h-48 p-8 mt-8 bg-zinc-200 rounded-full text-zinc-100"
     >
       <v-feather class="w-full h-full" :icon="icon"></v-feather>
     </div>
-    <div class="w-full text-center px-4 -mt-48">
+    <div class="w-full -mt-24">
       <p
         v-if="cite"
         class="md:text-xl text-lg text-zinc-600 italic font-serif mb-3"
@@ -35,7 +35,7 @@ const Props = defineProps({
     </div>
   </div>
 
-  <div class="hidden relative md:flex w-full px-12 mx-auto md:-mb-16">
+  <div class="hidden -z-20 md:flex relative w-full md:-mb-16">
     <div
       v-if="icon"
       class="absolute block -z-10 right-0 mr-8 lg:w-2/5 md:w-2/3 h-auto p-16 bg-zinc-200 rounded-full text-zinc-50"

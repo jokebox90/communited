@@ -48,34 +48,17 @@ onMounted(() => {
   <Hero
     title="Mon compte"
     description="Retrouvez toutes les informations de votre compte utilisateur."
+    icon="user"
   />
 
-  <div class="w-screen flex flex-row justify-center px-4 py-8">
-    <table class="border-collapse border border-rose-700 md:w-1/3 sm:w-80">
-      <tr>
-        <th
-          class="border border-yellow-300 bg-yellow-50 text-zinc-400 px-4 py-2"
-        >
-          Utilisateur
-        </th>
-        <td
-          class="border border-zinc-300 bg-yellow-300 text-zinc-700 px-4 py-2"
-        >
-          {{ state.userName }}
-        </td>
-      </tr>
-      <tr>
-        <th
-          class="border border-yellow-300 bg-yellow-50 text-zinc-400 px-4 py-2"
-        >
-          Adresse email
-        </th>
-        <td
-          class="border border-zinc-300 bg-yellow-300 text-zinc-700 px-4 py-2"
-        >
-          {{ state.userEmail }}
-        </td>
-      </tr>
-    </table>
+  <div class="w-full">
+    <div class="mb-3">
+      <p class="font-bold">Utilisateur</p>
+      <p>{{ state.userName }}</p>
+    </div>
+    <div class="mb-3">
+      <p class="font-bold">Adresse email</p>
+      <p>{{ state.userEmail }}</p>
+    </div>
   </div>
 </template>

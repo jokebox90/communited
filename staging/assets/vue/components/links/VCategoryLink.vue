@@ -21,7 +21,7 @@ const Props = defineProps({
 <template>
   <router-link
     :to="to"
-    class="lg:w-48 lg:h-48 md:w-32 md:h-32 w-24 h-24 py-4 px-2 flex flex-col items-center justify-around shadow-md md:shadow-xl hover:shadow-sm rounded-2xl border border-zinc-300"
+    class="lg:w-40 lg:h-40 md:w-32 md:h-32 w-24 h-24 py-4 px-2 flex flex-col items-center justify-around shadow-md md:shadow-xl hover:shadow-sm rounded-2xl border border-zinc-300"
     :class="[
       color == 'blue'
         ? 'bg-gradient-to-br from-blue-900 to-blue-500 hover:to-blue-400 text-white'
@@ -40,13 +40,13 @@ const Props = defineProps({
         : null,
     ]"
   >
-    <div class="w-full h-1/2 flex flex-col items-center justify-center">
+    <div class="w-full h-2/3 flex flex-col items-center justify-center">
       <div class="w-auto h-full">
         <i class="w-full h-full" :data-feather="icon"></i>
       </div>
     </div>
     <div class="w-full h-auto flex flex-col items-center justify-center">
-      <p class="text-center md:text-3xl text-lg">
+      <p class="text-center font-bold text-lg">
         {{ title }}
       </p>
     </div>

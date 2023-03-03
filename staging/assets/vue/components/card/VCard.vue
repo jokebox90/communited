@@ -8,7 +8,7 @@ const Props = defineProps({
 
 <template>
   <div
-    class="card lg:w-96 md:w-5/12 w-full flex flex-col justify-between shadow rounded-xl border"
+    class="card lg:w-80 md:w-5/12 w-full flex flex-col justify-between shadow rounded-xl border"
     :class="[
       color == 'blue'
         ? 'border-blue-500 bg-gradient-to-br from-blue-900 to-blue-500 hover:to-blue-400 text-white'

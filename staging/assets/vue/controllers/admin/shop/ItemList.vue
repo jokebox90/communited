@@ -31,11 +31,11 @@ onBeforeMount(async () => {
   <Hero
     title="Articles de la boutique"
     description="Retrouvez tous les article de votre boutique en ligne."
-    icon="shopping-cart"
+    icon="shopping-bag"
   />
 
-  <div class="flex flex-wrap flex-row gap-4 justify-center w-full pb-8 px-4">
-    <v-card v-for="item in state.items" color="yellow">
+  <div class="flex flex-wrap flex-row gap-4 w-full pb-8">
+    <v-card v-for="item in state.items" color="blue">
       <v-card-title class="border-zinc-200 text-zinc-200">
         {{ item.title }} ({{ item.available }})
       </v-card-title>
@@ -56,7 +56,7 @@ onBeforeMount(async () => {
           }"
           title="Afficher"
           icon="eye"
-          color="red"
+          color="blue"
         />
       </v-card-content>
     </v-card>

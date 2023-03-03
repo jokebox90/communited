@@ -32,9 +32,10 @@ onBeforeMount(async () => {
   <Hero
     title="Commandes enregistrées"
     description="Retrouvez toutes les commandes effectuées par vos clients."
+    icon="file-plus"
   />
 
-  <div class="flex flex-row flex-wrap gap-4 justify-center w-full px-4 py-8">
+  <div class="flex flex-row flex-wrap gap-4 w-full py-8">
     <v-card v-for="order in state.orders" color="yellow">
       <v-card-title class="border-zinc-200 text-zinc-200">
         {{ order.reference }} ({{ order.status }})
@@ -56,7 +57,7 @@ onBeforeMount(async () => {
           }"
           title="Afficher"
           icon="eye"
-          color="red"
+          color="yellow"
         />
       </v-card-content>
     </v-card>

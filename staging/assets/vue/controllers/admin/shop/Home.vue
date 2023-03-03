@@ -11,9 +11,7 @@ import VCategoryLink from "@/components/links/VCategoryLink.vue";
     description="Votre boutique en ligne."
     icon="shopping-cart"
   />
-  <div
-    class="flex flex-wrap flex-row justify-center md:gap-4 gap-2 w-full px-4 py-8"
-  >
+  <div class="flex flex-wrap flex-row md:gap-4 gap-2 py-8">
     <v-category-link
       :to="{ name: 'shop-item-list' }"
       title="Articles"

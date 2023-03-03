@@ -7,7 +7,7 @@ const Props = defineProps({
 </script>
 
 <template>
-  <div class="mb-2 px-4 text-zinc-800" :class="color">
+  <div class="mb-2 px-4" :class="color">
     <slot></slot>
   </div>
 </template>

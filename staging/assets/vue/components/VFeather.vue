@@ -19,5 +19,5 @@ const Props = defineProps({
 </script>
 
 <template>
-  <i :class="class" :data-feather="icon"></i>
+  <i class="w-full h-full" :class="class" :data-feather="icon"></i>
 </template>

@@ -35,50 +35,49 @@ onBeforeMount(async () => {
   <Hero
     title="Articles de la boutique"
     description="Retrouvez tous les article de votre boutique en ligne."
+    icon="shopping-bag"
   />
 
-  <div class="flex flex-wrap flex-row gap-4 justify-center w-full px-4 py-8">
-    <div
-      class="w-96 flex flex-col justify-between shadow-md rounded-xl border border-zinc-300 bg-gradient-to-br from-blue-900 to-blue-500 p-4"
-    >
-      <div>
-        <p class="mb-2 text-white">
-          <span class="font-bold">Titre</span>
-        </p>
+  <v-btn-link
+    :to="{ name: 'shop-item-list' }"
+    title="Retour"
+    icon="chevrons-left"
+    color="blue"
+  />
 
-        <p class="mb-2 ml-4 text-white">
-          {{ state.item.title }}
-        </p>
+  <div class="w-96 mt-8">
+    <div>
+      <p class="mb-2 text-zinc-900">
+        <span class="font-bold">Titre</span>
+      </p>
 
-        <p class="mb-2 text-white">
-          <span class="font-bold">Tags</span>
-        </p>
+      <p class="mb-2 ml-4 text-zinc-900">
+        {{ state.item.title }}
+      </p>
 
-        <p class="mb-2 ml-4 text-white">#{{ _.join(state.item.tags, " #") }}</p>
+      <p class="mb-2 text-zinc-900">
+        <span class="font-bold">Tags</span>
+      </p>
 
-        <p class="mb-2 text-white">
-          <span class="font-bold">Disponibilité</span>
-        </p>
+      <p class="mb-2 ml-4 text-zinc-900">
+        #{{ _.join(state.item.tags, " #") }}
+      </p>
 
-        <p class="mb-2 ml-4 text-white">
-          {{ state.item.available }}
-        </p>
+      <p class="mb-2 text-zinc-900">
+        <span class="font-bold">Disponibilité</span>
+      </p>
 
-        <p class="mb-2 text-white">
-          <span class="font-bold">Description</span>
-        </p>
+      <p class="mb-2 ml-4 text-zinc-900">
+        {{ state.item.available }}
+      </p>
 
-        <p class="mb-2 ml-4 text-white">
-          {{ state.item.description }}
-        </p>
-      </div>
+      <p class="mb-2 text-zinc-900">
+        <span class="font-bold">Description</span>
+      </p>
 
-      <v-btn-link
-        :to="{ name: 'shop-item-list' }"
-        title="Retour"
-        icon="chevrons-left"
-        color="blue"
-      />
+      <p class="mb-2 ml-4 text-zinc-900">
+        {{ state.item.description }}
+      </p>
     </div>
   </div>
 </template>

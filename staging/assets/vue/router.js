@@ -34,17 +34,17 @@ const routes = [
       {
         path: "",
         component: Home,
-        name: "home"
+        name: "home",
       },
       {
         path: "about",
         component: About,
-        name: "about"
+        name: "about",
       },
       {
         path: "hello/:firstName/:lastName",
         component: Hello,
-        name: "hello"
+        name: "hello",
       },
       {
         path: "sign-in",
@@ -71,10 +71,16 @@ const routes = [
     ],
   },
   {
-    path: "/details/add",
-    component: CustomerAddDetails,
-    name: "customer-add-details",
+    path: "/customer",
+    component: AppLayout,
     meta: { requiresAuth: true, backTo: "sign-in" },
+    children: [
+      {
+        path: "details/add",
+        component: CustomerAddDetails,
+        name: "customer-add-details",
+      },
+    ],
   },
   {
     path: "/admin",
@@ -145,10 +151,13 @@ const router = createRouter({
 async function canUserAccess(to, from) {
   const { userState, doSignOut } = useUserStore();
 
-  if (to.matched.some(m => m.meta.requiresAuth)  && !userState.isAuthenticated) {
+  if (
+    to.matched.some((m) => m.meta.requiresAuth) &&
+    !userState.isAuthenticated
+  ) {
     await warning("Vous n'êtes pas connecté.");
     doSignOut();
-    return false;
+    window.location.href = "/sign-in";
   }
 
   return true;

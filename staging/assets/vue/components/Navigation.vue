@@ -3,11 +3,11 @@
 
 import _ from "lodash";
 import { reactive } from "vue";
-import { useBrowserStore, useUserStore } from "@/helpers/stores";
+import { useUserStore } from "@/helpers/stores";
+import VFeather from "@/components/VFeather.vue";
 import VNavLink from "@/components/links/VNavLink.vue";
-import VMenuLink from "./links/VMenuLink.vue";
+import VMenuLink from "@/components/links/VMenuLink.vue";
 
-const { browserState } = useBrowserStore();
 const { userState } = useUserStore();
 const { isAuthenticated, isAdmin } = userState;
 
@@ -36,11 +36,14 @@ function toggle() {
     <div
       class="z-50 relative bg-transparent py-6 w-full inline-flex justify-between"
     >
-      <span
-        class="mr-3 px-3 border-r border-yellow-500 text-2xl text-yellow-500"
+      <div
+        class="inline-flex items-end gap-4 px-4 border-r-2 border-yellow-500 text-yellow-500"
       >
-        Tableau de bord
-      </span>
+        <span class="w-8 h-8 text-2xl">
+          <v-feather icon="command"></v-feather>
+        </span>
+        <span class="text-2xl"> Tableau de bord </span>
+      </div>
 
       <button
         type="button"
