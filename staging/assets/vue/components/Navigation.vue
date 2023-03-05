@@ -31,7 +31,7 @@ function toggle() {
 
 <template>
   <nav
-    class="flex flex-col items-start justify-between md:flex md:flex-row md:items-stretch w-screen bg-zinc-50"
+    class="flex flex-col items-start justify-between md:flex md:flex-row md:items-stretch w-screen bg-gradient-to-b from-rose-700 to-rose-900"
   >
     <div
       class="z-50 relative bg-transparent py-6 w-full inline-flex justify-between"
@@ -42,7 +42,7 @@ function toggle() {
         <span class="w-8 h-8 text-2xl">
           <v-feather icon="command"></v-feather>
         </span>
-        <span class="text-2xl"> Tableau de bord </span>
+        <span class="text-2xl"> [Titre du site] </span>
       </div>
 
       <button
@@ -57,7 +57,7 @@ function toggle() {
 
     <div :class="state.open ? null : `hidden`" class="static overflow-hidden">
       <div
-        class="z-40 md:w-1/2 w-screen overflow-hidden flex flex-col items-end py-3 pr-3 bg-zinc-200 text-zinc-900 px-3 pb-3 absolute right-0 top-20"
+        class="z-40 md:w-1/2 w-screen overflow-hidden flex flex-col items-end py-3 pr-3 bg-zinc-200 text-zinc-200 px-3 pb-3 absolute right-0 top-20"
         :class="state.transition"
       >
         <v-menu-link

@@ -8,13 +8,18 @@
   --animate-delay: 0.15s;
 }
 
-html {
-  width: auto;
-  max-width: 100vw;
-  height: auto;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  overflow-x: hidden;
+@layer base {
+  h1,
+  h2,
+  h3 {
+    @apply text-3xl font-bold;
+    font-family: "Amatic SC";
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply text-xl font-bold;
+    font-family: "Droid Serif";
+  }
 }

@@ -23,7 +23,7 @@ const Props = defineProps({
 <template>
   <router-link
     :to="to"
-    class="transition-all hover:-translate-y-1 w-max inline-flex items-center justify-center rounded-xl border"
+    class="transition-all delay-200 duration-300 hover:-translate-y-1 w-max inline-flex items-center justify-center rounded-xl border"
     :class="[
       color == 'blue'
         ? 'border-blue-500 bg-gradient-to-br from-blue-900 to-blue-500 hover:to-blue-400 text-white'
@@ -36,6 +36,9 @@ const Props = defineProps({
         : null,
       color == 'red'
         ? 'border-red-500 bg-gradient-to-br from-red-700 to-red-300 hover:to-red-200 text-white'
+        : null,
+      color == 'rose'
+        ? 'border-rose-500 bg-gradient-to-br from-rose-700 to-rose-300 hover:to-rose-200 text-white'
         : null,
       color == 'violet'
         ? 'border-violet-500 bg-gradient-to-br from-violet-900 to-violet-400 hover:to-violet-300 text-white'

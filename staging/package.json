@@ -50,5 +50,8 @@
         "last 2 versions",
         "Firefox ESR",
         "not dead"
-    ]
+    ],
+    "dependencies": {
+        "webfontloader": "^1.6.28"
+    }
 }
